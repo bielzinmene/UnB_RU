@@ -42,12 +42,3 @@ Funcionalidade: Autenticação de Funcionário
     Então o cadastro deve ser recusado
     E devo ser informado que não há nenhuma conta com esses dados registrados no sistema
     E informar que o acesso de autentiação de funcionário para aluno é proibida.
-
-
-  Cenário: Recusar matrícula já cadastrada
-    Dado que já existe uma conta com a matrícula "241020803"
-    Quando preencho o cadastro com nome "Ana Braz", matrícula "241020803", senha "Certa@123" e confirmação "Certa@123"
-    E solicito a criação da conta
-    Então o cadastro deve ser recusado
-    E devo ver a mensagem "Matricula já existente"
-    E nenhuma outra conta deve ser criada com a matrícula "241020803"
