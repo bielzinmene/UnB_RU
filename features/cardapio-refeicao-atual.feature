@@ -1,4 +1,4 @@
-# language pt
+# language: pt
 # issue 10
 
 Funcionalidade: Cardápio da Refeição Atual
