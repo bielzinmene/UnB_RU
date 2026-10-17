@@ -6,28 +6,27 @@ Funcionalidade: Exportação em PDF do relatório de operação
   Quero exportar o relatório global de operação em PDF
   Para consultar a operação do período filtrado
 
-  Regras:
-  - Somente um administrador geral autenticado pode exportar o PDF.
-  - O PDF usa os filtros vigentes: data, turno e campus.
-  - O turno pode ser Café, Almoço, Jantar ou todos.
-  - A exportação CSV fica fora do escopo desta funcionalidade.
-
-  Contexto:
-    Dado que estou autenticado como administrador geral
-
     # caminho feliz
 
   Cenário: Exportar o PDF do período filtrado
-    Dado que há operação em 24/10/2025 no Campus Darcy Ribeiro
+    Dado que estou autenticado como administrador geral
+    E que há operação em 24/10/2025 no Campus Darcy Ribeiro
     Quando filtro o relatório por data "24/10/2025", turno "Todos" e campus "Campus Darcy Ribeiro"
     E solicito a exportação do PDF
     Então o PDF deve ser gerado para 24/10/2025, todos os turnos e o Campus Darcy Ribeiro
 
-  Cenário: Exportar o PDF de um único turno
-    Dado que há operação em 24/10/2025 no Campus Darcy Ribeiro
-    Quando filtro o relatório por data "24/10/2025", turno "Almoço" e campus "Campus Darcy Ribeiro"
+  Esquema do Cenário: Exportar o PDF de um único turno
+    Dado que estou autenticado como administrador geral
+    E que há operação em 24/10/2025 no Campus Darcy Ribeiro
+    Quando filtro o relatório por data "24/10/2025", turno "<turno>" e campus "Campus Darcy Ribeiro"
     E solicito a exportação do PDF
-    Então o PDF deve conter apenas o turno "Almoço"
+    Então o PDF deve conter apenas o turno "<turno>" de "24/10/2025" no "Campus Darcy Ribeiro"
+
+    Exemplos:
+      | turno  |
+      | Café   |
+      | Almoço |
+      | Jantar |
 
     # caminhos tristes
 
@@ -38,7 +37,8 @@ Funcionalidade: Exportação em PDF do relatório de operação
     E nenhum PDF deve ser gerado
 
   Cenário: Recusar exportação sem operação no período
-    Dado que não há operação em 01/01/2025 no Campus Darcy Ribeiro
+    Dado que estou autenticado como administrador geral
+    E que não há operação em 01/01/2025 no Campus Darcy Ribeiro
     Quando filtro o relatório por data "01/01/2025", turno "Todos" e campus "Campus Darcy Ribeiro"
     E solicito a exportação do PDF
     Então a exportação deve ser recusada

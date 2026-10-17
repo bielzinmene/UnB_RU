@@ -6,14 +6,7 @@ Funcionalidade: Autenticação de Funcionário
   Quero fazer login na aplicação de controle
   Para autenticar minha sessão e operar o sistema de forma segura
 
-  Regras:
-  - O funcionário do restaurante obrigatoriamente ter sido cadastrado no sistema.
-  - O funcionário do restaurante deve informar a sua identificação (matrícula SIAPE ou Usuário SIGAA) e senha cadastrados no sistema.
-  - Uma matrícula SIAPE é exclusiva para cada funcionário, ou seja, um funcionário não poderá acessar o sistema com dados de outro empregado.
-  - O sistema deverá permitir o acesso somente quando o identificador informado corresponder a um funcionário cadastrado e a senha for válida.
-  - Somente após uma autenticação bem-sucedida o funcionário poderá acessar as funcionalidades protegidas do sistema.
-  - Estudantes estão proibidos de acessar a Autenticação de Funcionário.
-  - O funcionário deverá poder encerrar sua sessão por meio da funcionalidade de logout.
+
   Contexto:
     Dado que a funcionária "Aline" está cadastrada no sistema
 
@@ -29,6 +22,30 @@ Funcionalidade: Autenticação de Funcionário
     Quando solicito o encerramento da sessão
     Então minha sessão deve ser encerrada
     E não devo mais acessar funcionalidades protegidas sem realizar novo login
+
+  Cenário: Autenticar com usuário SIGAA cadastrado
+    Dado que a funcionária "Aline" possui o usuário SIGAA "aline.ru" e a senha "Teste@1234"
+    Quando informo o usuário SIGAA "aline.ru" e a senha "Teste@1234"
+    Então a sessão da funcionária "Aline" deve ser autenticada
+    E devo poder acessar as funcionalidades protegidas
+
+  Cenário: Impedir acesso a funcionalidades protegidas antes do login
+    Dado que não estou autenticado no sistema do RU
+    Quando tento acessar uma funcionalidade protegida
+    Então o acesso deve ser negado
+
+  Cenário: Recusar identificador de funcionário não cadastrado
+    Dado que não existe funcionário com a matrícula SIAPE "9999999"
+    Quando informo a matrícula SIAPE "9999999" e a senha "Teste@1234"
+    Então o login deve ser recusado
+    E não devo acessar funcionalidades protegidas
+
+  Cenário: Recusar acesso com a matrícula de outro funcionário
+    Dado que "Aline" está cadastrada com a matrícula SIAPE "241020788" e senha "Teste@1234"
+    E que "Bruno" está cadastrado com a matrícula SIAPE "241020789" e senha "Outra@1234"
+    Quando informo a matrícula SIAPE "241020788" e a senha "Outra@1234"
+    Então o login deve ser recusado
+    E não devo acessar a conta de "Aline"
     # caminhos tristes
 
   Esquema do Cenário: Recusar autenticação com senha inválida
