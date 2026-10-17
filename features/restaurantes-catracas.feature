@@ -6,17 +6,6 @@
 Funcionalidade: Gestão de Restaurantes e Catracas
 Como administrador, eu quero cadastrar, editar e remover diferentes restaurantes e suas respectivas catracas físicas no sistema, para que os funcionários possam selecioná-las na Aplicação de Controle.
 
-Regras:
-
-- Os restaurantes possuem IDs de 1 a 6.
-- Não podem existir dois restaurantes com o mesmo ID.
-- Todo restaurante deve ter uma catraca associada.
-- As catracas possuem IDs de 1 a 6.
-- Não podem existir duas catracas com o mesmo ID.
-- Uma catraca só pode ser associada a um restaurante.
-- Um restaurante não pode ficar sem catraca.
-- Não podem ser cadastrados restaurantes ou catracas com IDs fora de 1 a 6.
-- Apenas administradores podem cadastrar, editar e remover restaurantes e catracas.
 
 Contexto:
   Dado que a data atual é 16/10/2026
