@@ -4,7 +4,7 @@
 Funcionalidade: Recarga de saldo
   Como estudante
   Eu quero adicionar créditos a minha conta via PIX ou cartão de crédito
-  Para que eu tenha saldo suficiente para acessar os restaurantes Universitários 
+  Para que eu tenha saldo suficiente para acessar os restaurantes Universitários
 
   Regras:
   - Todos os campos do formulário de dados do cartão são obrigatórios:
