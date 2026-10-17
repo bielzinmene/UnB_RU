@@ -48,29 +48,28 @@ Funcionalidade: Recarga de saldo
 
     #triste
 
-  Esquema de Cenário: tentar recarregar com valor inválido
+  Esquema do Cenário: Recusar recarga com valor inválido
     Quando eu preencho o valor da recarga com "<valor>"
     E confirmo a solicitação de recarga
     Então o sistema deve impedir a operação
     E devo visualizar a mensagem de erro "<mensagem>"
 
     Exemplos:
-      | valor   | mensagem                                               | 
-      | R$0,00  | "Selecione um valor"                                   |
-      | R$-1,50 | "Selecione um valor positivo"                          |
-      | R$700,00| "O valor final do seu saldo não pode exceder R$500,00" |
-      | R$2,4   | "Complete as casas decimais"                           |
+      | valor    | mensagem                                              |
+      | R$0,00   | Selecione um valor                                    |
+      | R$-1,50  | Selecione um valor positivo                           |
+      | R$700,00 | O valor final do seu saldo não pode exceder R$500,00 |
+      | R$2,4    | Complete as casas decimais                            |
 
   Esquema do Cenário: Preencher dados inválidos do cartão de crédito
-    Quando eu preencho um <dado> do cartão de crédito
-    Com um determinado <valor>
+    Quando eu preencho o dado "<dado>" do cartão de crédito com "<valor>"
     E confirmo o cadastro do cartão
     Então o sistema deve impedir a operação
     E devo visualizar a mensagem de erro "<mensagem>"
 
     Exemplos:
-      |         dado         |  valor        |  mensagem
-      | nº do cartão         | null          | "Insira um número válido."        |
-      | CPF do titular       | 126.032.894-7 | "Insira um CPF válido."           |
-      | Código de segurança  | 0             | "CVV inválido."                   |
-      | validade             | 28/19         | "Insira uma data válida (mm/aa)." |
+      | dado                | valor         | mensagem                        |
+      | nº do cartão        | null          | Insira um número válido.        |
+      | CPF do titular      | 126.032.894-7 | Insira um CPF válido.           |
+      | Código de segurança | 0             | CVV inválido.                   |
+      | validade            | 28/19         | Insira uma data válida (mm/aa). |

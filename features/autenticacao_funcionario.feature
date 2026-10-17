@@ -32,18 +32,18 @@ Funcionalidade: Autenticação de Funcionário
     # caminhos tristes
 
   Esquema do Cenário: Recusar autenticação com senha inválida
-    Dado que há cadastro com a matrícula "241020788"
-    Quando preencho os campos com a Matrícula SIAPE "241020788" e a Senha de Acesso "Teste1234"
+    Dado que há um funcionário cadastrado com a matrícula "<matricula>" e a senha "<senha_cadastrada>"
+    Quando preencho os campos com a Matrícula SIAPE "<matricula>" e a Senha de Acesso "<senha_fornecida>"
     Então o login deve ser recusado
     E devo ser informado de que a Matrícula e/ou a Senha de Acesso estão incorretos.
 
     Exemplos:
-    | matricula | senha  cadastrada   | senha fornecida  |
-    | 241020788 | Teste@1234          |   teste1234      |
-    | 241020788 | Teste@1234          |   TESTE@123      |
-    | 241020788 | Teste@1234          |   test12345      |
+      | matricula | senha_cadastrada | senha_fornecida |
+      | 241020788 | Teste@1234      | teste1234       |
+      | 241020788 | Teste@1234      | TESTE@123       |
+      | 241020788 | Teste@1234      | test12345       |
 
-  Esquema do Cenário: Recusar a autenticação do aluno no sistema
+  Cenário: Recusar a autenticação do aluno no sistema
     Quando preencho os campos de login com a matrícula estudantil e com a senha de acesso
     Então o cadastro deve ser recusado
     E devo ser informado que não há nenhuma conta com esses dados registrados no sistema
@@ -51,14 +51,13 @@ Funcionalidade: Autenticação de Funcionário
 
   Esquema do Cenário: Recusar autenticação com campos obrigatórios vazios
     Dado que estou na tela de login do sistema do RU
-    Quando preencho a matrícula SIAPE/SIGAA com "<matricula>"
-    E não preencho o campo da senha de acesso 
+    Quando preencho a matrícula SIAPE/SIGAA com "<matricula>" e a senha de acesso com "<senha>"
     E solicito a autenticação
     Então o sistema deve impedir o login
     E deve informar que os campos obrigatórios precisam ser preenchidos
-  
-  Exemplos:
-    | matricula | senha      |
-    |           | Teste@1234 |
-    | 241020788 |            |
-    |           |            |
+
+    Exemplos:
+      | matricula | senha      |
+      |           | Teste@1234 |
+      | 241020788 |            |
+      |           |            |

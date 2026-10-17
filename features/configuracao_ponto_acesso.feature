@@ -23,9 +23,9 @@ Funcionalidade: Configuração de ponto de acesso
 
     # caminho feliz
 
-  Cenário: Criar conta com dados válidos
+  Cenário: Cadastrar ponto de acesso com dados válidos
     Dado que não existe um ponto de acesso com o número RU05
-    Quando Quando preencho a configuração com identificador "RU05", nome "Restaurante Universitário número 5", campus "UnB Darcy Ribeiro" e status "Ativo"
+    Quando preencho a configuração com identificador "RU05", nome "Restaurante Universitário número 5", campus "UnB Darcy Ribeiro" e status "Ativo"
     E solicito o cadastro do ponto de acesso
     Então o ponto de acesso "RU05" deve ser cadastrado
 
