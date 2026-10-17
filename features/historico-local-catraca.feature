@@ -1,7 +1,7 @@
 # language: pt
 # issue 7
 
-Funcionalidade: Histórico de Acessos da Catraca
+Funcionalidade: Histórico Local da Catraca
 
 Como funcionário, eu quero visualizar na aplicação de controle o histórico de todos os acessos registrados apenas na catraca que estou gerenciando no momento, para realizar auditorias ou conferências locais de fluxo.
 
