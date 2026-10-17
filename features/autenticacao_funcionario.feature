@@ -1,44 +1,46 @@
 # language: pt
-# issue 4
+# issue 11
 
-Funcionalidade: Autenticação de Funcionário
-  Como funcionário do restaurante
-  Quero fazer login na aplicação de controle
-  Para autenticar minha sessão e operar o sistema de forma segura
+Funcionalidade: Exportação em PDF do relatório de operação
+  Como administrador geral do RU
+  Quero exportar o relatório global de operação em PDF
+  Para consultar a operação do período filtrado
 
   Regras:
-  - O funcionário do restaurante obrigatoriamente ter sido cadastrado no sistema.
-  - O funcionário do restaurante deve informar a sua matrícula SIAPE ou Usuário SIGAA e senha cadastrados no sistema.
-  - A senha contém pelo menos 8 caracteres, incluindo ao menos um número,
-  uma letra maiúscula, uma letra minúscula e um caractere especial.
-  - O funcionário do restaurante
-  - Uma matrícula SIAPE é exclusiva para cada funcionário, ou seja, um funcionário não poderá acessar o sistema com dados de outro empregado.
+  - Somente um administrador geral autenticado pode exportar o PDF.
+  - O PDF usa os filtros vigentes: data, turno e campus.
+  - O turno pode ser Café, Almoço, Jantar ou todos.
+  - A exportação CSV fica fora do escopo desta funcionalidade.
+
   Contexto:
-    Dado que a data atual é 15/10/2026
+    Dado que estou autenticado como administrador geral
 
-    # caminho felis
+    # caminho feliz
 
-  Cenário: Se autenticar para entrar no sistema do RU
-    Dado que cadastrei um funcionário com a matrícula SIAPE "241020788"
-    Quando preencho os campos com a Matrícula SIAPE "241020788" e a Senha de Acesso "Teste@1234"
-    Então o login da conta que pertence a matrícula "241020788" é efetuada com êxito.
+  Cenário: Exportar o PDF do período filtrado
+    Dado que há operação em 24/10/2025 no Campus Darcy Ribeiro
+    Quando filtro o relatório por data "24/10/2025", turno "Todos" e campus "Campus Darcy Ribeiro"
+    E solicito a exportação do PDF
+    Então o PDF deve ser gerado para 24/10/2025, todos os turnos e o Campus Darcy Ribeiro
+
+  Cenário: Exportar o PDF de um único turno
+    Dado que há operação em 24/10/2025 no Campus Darcy Ribeiro
+    Quando filtro o relatório por data "24/10/2025", turno "Almoço" e campus "Campus Darcy Ribeiro"
+    E solicito a exportação do PDF
+    Então o PDF deve conter apenas o turno "Almoço"
 
     # caminhos tristes
 
-  Esquema do Cenário: Recusar autenticação com senha inválida
-    Dado que há cadastro com a matrícula "241020788"
-    Quando preencho os campos com a Matrícula SIAPE "241020788" e a Senha de Acesso "Teste1234"
-    Então o login deve ser recusado
-    E devo ser informado de que a Matrícula e/ou a Senha de Acesso estão incorretos.
+  Cenário: Recusar exportação sem sessão de administrador
+    Dado que não estou autenticado como administrador geral
+    Quando solicito a exportação do PDF
+    Então a exportação deve ser recusada
+    E nenhum PDF deve ser gerado
 
-    Exemplos:
-    | matricula | senha  cadastrada   | senha fornecida  |
-    | 241020788 | Teste@1234          |   teste1234      |
-    | 241020788 | Teste@1234          |   TESTE@123      |
-    | 241020788 | Teste@1234          |   test12345      |
-
-  Esquema do Cenário: Recusar a autenticação do aluno no sistema
-    Quando preencho os campos de login com a matrícula estudantil e com a senha de acesso
-    Então o cadastro deve ser recusado
-    E devo ser informado que não há nenhuma conta com esses dados registrados no sistema
-    E informar que o acesso de autentiação de funcionário para aluno é proibida.
+  Cenário: Recusar exportação sem operação no período
+    Dado que não há operação em 01/01/2025 no Campus Darcy Ribeiro
+    Quando filtro o relatório por data "01/01/2025", turno "Todos" e campus "Campus Darcy Ribeiro"
+    E solicito a exportação do PDF
+    Então a exportação deve ser recusada
+    E devo ser informado de que não há operação no período
+    E nenhum PDF deve ser gerado
