@@ -16,26 +16,26 @@ Funcionalidade: Autenticação de Funcionário
   Contexto:
     Dado que a data atual é 15/10/2026
 
-    # caminho felis
+    # caminho feliz
 
   Cenário: Se autenticar para entrar no sistema do RU
-    Dado que cadastrei um funcionário com a matrícula SIAPE "241020788"
-    Quando preencho os campos com a Matrícula SIAPE "241020788" e a Senha de Acesso "Teste@1234"
-    Então o login da conta que pertence a matrícula "241020788" é efetuada com êxito.
+    Dado que cadastrei um funcionário com a matrícula SIAPE "123456-7"
+    Quando preencho os campos com a Matrícula SIAPE "123456-7" e a Senha de Acesso "Teste@1234"
+    Então o login da conta que pertence a matrícula "123456-7" é efetuada com êxito.
 
     # caminhos tristes
 
   Esquema do Cenário: Recusar autenticação com senha inválida
-    Dado que há cadastro com a matrícula "241020788"
-    Quando preencho os campos com a Matrícula SIAPE "241020788" e a Senha de Acesso "Teste1234"
+    Dado que há cadastro com a matrícula "123456-7"
+    Quando preencho os campos com a Matrícula SIAPE "123456-7" e a Senha de Acesso "Teste1234"
     Então o login deve ser recusado
     E devo ser informado de que a Matrícula e/ou a Senha de Acesso estão incorretos.
 
     Exemplos:
     | matricula | senha  cadastrada   | senha fornecida  |
-    | 241020788 | Teste@1234          |   teste1234      |
-    | 241020788 | Teste@1234          |   TESTE@123      |
-    | 241020788 | Teste@1234          |   test12345      |
+    | 123456-7  | Teste@1234          |   teste1234      |
+    | 123456-7  | Teste@1234          |   TESTE@123      |
+    | 123456-7  | Teste@1234          |   test12345      |
 
   Esquema do Cenário: Recusar a autenticação do aluno no sistema
     Quando preencho os campos de login com a matrícula estudantil e com a senha de acesso
