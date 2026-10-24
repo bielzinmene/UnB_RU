@@ -1,0 +1,2 @@
+module AutenticacaoOperadorHelper
+end
