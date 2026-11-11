@@ -1,9 +1,9 @@
 # language: pt
 # issue 10
 
-Funcionalidade: Cardápio da Refeição Atual
+Funcionalidade: Cardápio do dia
 
-Como estudante, eu quero poder ver o cardápio da refeição que esteja sendo servida agora. Incluindo as opções padrão, ovolactovegetariano e vegetariano estrito.
+Como estudante, quero consultar as três refeições do dia a qualquer horário para planejar minha ida ao RU. Cada refeição apresenta as opções padrão, ovolactovegetariana e vegetariana estrita.
 
 
 Contexto:
@@ -21,8 +21,14 @@ Cenário: Visualizar cardápio da refeição atual
 
 # caminhos tristes
 
-Cenário: Informar ausência de cardápio
-
-  Dado que não existe cardápio para a refeição atual
+Cenário: Consultar as três refeições fora do horário de serviço
+  Dado que o horário atual é "16:00"
   Quando acesso o cardápio
-  Então devo ser informado que não há cardápio disponível
+  Então devo visualizar café da manhã, almoço e jantar
+  E devo visualizar as opções das três refeições
+
+Cenário: Informar indisponibilidade dos dados do cardápio
+
+  Dado que os dados do cardápio do dia estão indisponíveis
+  Quando acesso o cardápio
+  Então devo ser informado que o cardápio está temporariamente indisponível

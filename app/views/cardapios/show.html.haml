@@ -1,0 +1,31 @@
+%section.page-heading
+  %div
+    %p.eyebrow ALIMENTAÇÃO NA UnB
+    %h1 Cardápio do dia
+    %p.page-subtitle Confira as opções de todas as refeições e planeje sua ida ao RU.
+  %span.date-pill= Date.current.strftime("%d/%m/%Y")
+- if @refeicoes.any?
+  .meal-grid
+    - @refeicoes.each do |refeicao|
+      %section.meal-card{ class: (refeicao.em_andamento?(Time.current) ? "meal-current" : nil) }
+        .meal-card-top
+          %div
+            %p.meal-kicker REFEIÇÃO
+            %h2= { "cafe_da_manha" => "Café da manhã", "almoco" => "Almoço", "jantar" => "Jantar" }.fetch(refeicao.tipo, refeicao.tipo.humanize)
+          - if refeicao.em_andamento?(Time.current)
+            %span.current-badge Refeição sendo servida agora
+        %p.meal-time Horário: #{refeicao.inicio.strftime("%H:%M")} às #{refeicao.fim.strftime("%H:%M")}
+        %dl.meal-options
+          %div
+            %dt Opção padrão
+            %dd= refeicao.opcao_padrao
+          %div
+            %dt Opção ovolactovegetariana
+            %dd= refeicao.opcao_ovolactovegetariana
+          %div
+            %dt Opção vegetariana estrita
+            %dd= refeicao.opcao_vegetariana_estrita
+- else
+  .empty-state{ role: "status" }
+    %h2 Cardápio temporariamente indisponível
+    %p Tente novamente mais tarde.
