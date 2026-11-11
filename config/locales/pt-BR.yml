@@ -1,0 +1,15 @@
+pt-BR:
+  activerecord:
+    errors:
+      messages:
+        record_invalid: "Falha na validação: %{errors}"
+    attributes:
+      user:
+        nome: "nome completo"
+        matricula: "matrícula"
+        password: "senha"
+        password_confirmation: "confirmação de senha"
+  errors:
+    messages:
+      confirmation: "é diferente da senha"
+      blank: "é obrigatório"
