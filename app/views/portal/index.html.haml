@@ -1,0 +1,31 @@
+%section.hero
+  .hero-content
+    %p.eyebrow RESTAURANTE UNIVERSITÁRIO · UnB
+    %h1 Sua rotina no RU, mais simples.
+    %p.hero-lead Consulte as refeições do dia e acesse os serviços do Restaurante Universitário da Universidade de Brasília.
+    .hero-actions
+      = link_to "Ver cardápio do dia", cardapio_path, class: "button button-primary"
+      = link_to "Criar conta de estudante", cadastro_path, class: "button button-outline"
+      - unless usuario_atual&.estudante?
+        = link_to "Entrar como estudante", login_estudante_path, class: "button button-outline"
+  .hero-art{ "aria-hidden": "true" }
+    %span.art-circle
+    %span.art-plate
+      %span.art-leaf
+      %span.art-grain
+%section.quick-links{ "aria-label": "Acesso rápido" }
+  = link_to cadastro_path, class: "quick-card" do
+    %span.quick-icon 01
+    %h2 Cadastro de estudante
+    %p Crie sua conta para acessar os serviços do RU.
+    %span.quick-arrow Acessar →
+  = link_to cardapio_path, class: "quick-card" do
+    %span.quick-icon 02
+    %h2 Cardápio do dia
+    %p Confira café da manhã, almoço e jantar a qualquer hora.
+    %span.quick-arrow Consultar →
+  = link_to area_funcionario_path, class: "quick-card" do
+    %span.quick-icon 03
+    %h2 Área do funcionário
+    %p Entre com suas credenciais para acessar sua área.
+    %span.quick-arrow Entrar →

@@ -1,0 +1,19 @@
+.form-page
+  .form-heading
+    %span.heading-icon{ "aria-hidden": "true" } ▣
+    %span ACESSO DO ESTUDANTE
+    %span.system-badge ● Sistema de Acesso UnB
+  .form-card
+    %p.eyebrow ÁREA DO ESTUDANTE
+    %h1 Login do estudante
+    %p.form-intro Entre com sua matrícula e senha para acessar sua conta em outra visita.
+    = form_with url: login_estudante_path, class: "stacked-form" do |form|
+      .field
+        = form.label :matricula, "Matrícula"
+        = form.text_field :matricula, value: params[:matricula], placeholder: "Digite sua matrícula SIGAA", autocomplete: "username", required: true
+      .field
+        = form.label :senha, "Senha de Acesso"
+        = form.password_field :senha, placeholder: "Digite sua senha", autocomplete: "current-password", required: true
+      = form.submit "Entrar", class: "button button-primary form-submit"
+    %p.form-secondary Ainda não tem conta? #{link_to "Cadastre-se", cadastro_path}.
+    %p.form-secondary= link_to "Voltar ao início", root_path

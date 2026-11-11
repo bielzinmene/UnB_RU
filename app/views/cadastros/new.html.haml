@@ -1,0 +1,41 @@
+.form-page
+  .form-heading
+    %span.heading-icon{ "aria-hidden": "true" } ▣
+    %span CADASTRO DE USUÁRIO
+    %span.system-badge ● Sistema de Acesso UnB
+  .form-card
+    %p.eyebrow US07 · CADASTRO DE NOVO USUÁRIO
+    %h1 Cadastro de estudante
+    %p.form-intro Preencha seus dados pessoais e de acesso para criar sua conta no sistema.
+    - if @user.errors.any?
+      .validation-box{ role: "alert" }
+        %strong Cadastro recusado
+        %ul
+          - @user.errors.each do |erro|
+            %li= erro.attribute == :matricula && erro.type == :taken ? "Matrícula #{@user.matricula} já está cadastrada." : erro.full_message
+    = form_with model: @user, url: cadastro_path, class: "stacked-form" do |form|
+      .field
+        .field-heading
+          = form.label :nome, "Nome completo"
+          %span Obrigatório
+        = form.text_field :nome, placeholder: "Digite seu nome completo", autocomplete: "name", required: true
+      .field
+        .field-heading
+          = form.label :matricula, "Matrícula"
+          %span Obrigatório
+        = form.text_field :matricula, placeholder: "Digite sua matrícula SIGAA", autocomplete: "username", required: true
+      .field-row
+        .field
+          .field-heading
+            = form.label :password, "Senha"
+            %span Obrigatório
+          = form.password_field :password, placeholder: "Crie uma senha forte", autocomplete: "new-password", required: true
+        .field
+          .field-heading
+            = form.label :password_confirmation, "Confirmação de senha"
+            %span Obrigatório
+          = form.password_field :password_confirmation, placeholder: "Confirme sua senha", autocomplete: "new-password", required: true
+      = form.submit "Criar conta", class: "button button-primary form-submit"
+    %p.form-secondary Já possui conta de estudante? #{link_to "Entre aqui", login_estudante_path}.
+    %p.form-secondary Acesso de funcionário: #{link_to "Entre aqui", login_funcionario_path}.
+    %p.privacy-note Seus dados são utilizados para identificação e acesso ao sistema.

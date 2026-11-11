@@ -1,0 +1,19 @@
+.form-page
+  .form-heading
+    %span.heading-icon{ "aria-hidden": "true" } ▣
+    %span ACESSO DO FUNCIONÁRIO
+    %span.system-badge ● Sistema de Acesso UnB
+  .form-card
+    %p.eyebrow ÁREA RESTRITA
+    %h1 Login do funcionário
+    %p.form-intro Informe seu identificador e sua senha para entrar na área do funcionário.
+    %p.info-note O acesso de autenticação de funcionário para aluno é proibido.
+    = form_with url: login_funcionario_path, class: "stacked-form" do |form|
+      .field
+        = form.label :identificador, "Matrícula SIAPE ou usuário SIGAA"
+        = form.text_field :identificador, placeholder: "Digite sua matrícula ou usuário", autocomplete: "username", required: true
+      .field
+        = form.label :senha, "Senha de Acesso"
+        = form.password_field :senha, placeholder: "Digite sua senha", autocomplete: "current-password", required: true
+      = form.submit "Entrar", class: "button button-primary form-submit"
+    %p.form-secondary= link_to "Voltar ao início", root_path

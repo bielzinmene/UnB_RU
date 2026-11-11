@@ -13,9 +13,9 @@ Funcionalidade: Autenticação de Funcionário
     # caminho feliz
 
   Cenário: Se autenticar para entrar no sistema do RU
-    Dado que cadastrei um funcionário com a matrícula SIAPE "241020788"
-    Quando preencho os campos com a Matrícula SIAPE "241020788" e a Senha de Acesso "Teste@1234"
-    Então o login da conta que pertence a matrícula "241020788" é efetuada com êxito.
+    Dado que cadastrei um funcionário com a matrícula SIAPE "123456-7"
+    Quando preencho os campos com a Matrícula SIAPE "123456-7" e a Senha de Acesso "Teste@1234"
+    Então o login da conta que pertence a matrícula "123456-7" é efetuada com êxito.
 
   Cenário: Encerrar a sessão do funcionário
     Dado que estou autenticado no sistema do RU
@@ -35,15 +35,15 @@ Funcionalidade: Autenticação de Funcionário
     Então o acesso deve ser negado
 
   Cenário: Recusar identificador de funcionário não cadastrado
-    Dado que não existe funcionário com a matrícula SIAPE "9999999"
-    Quando informo a matrícula SIAPE "9999999" e a senha "Teste@1234"
+    Dado que não existe funcionário com a matrícula SIAPE "999999-9"
+    Quando informo a matrícula SIAPE "999999-9" e a senha "Teste@1234"
     Então o login deve ser recusado
     E não devo acessar funcionalidades protegidas
 
   Cenário: Recusar acesso com a matrícula de outro funcionário
-    Dado que "Aline" está cadastrada com a matrícula SIAPE "241020788" e senha "Teste@1234"
-    E que "Bruno" está cadastrado com a matrícula SIAPE "241020789" e senha "Outra@1234"
-    Quando informo a matrícula SIAPE "241020788" e a senha "Outra@1234"
+    Dado que "Aline" está cadastrada com a matrícula SIAPE "123456-7" e senha "Teste@1234"
+    E que "Bruno" está cadastrado com a matrícula SIAPE "123456-8" e senha "Outra@1234"
+    Quando informo a matrícula SIAPE "123456-7" e a senha "Outra@1234"
     Então o login deve ser recusado
     E não devo acessar a conta de "Aline"
     # caminhos tristes
@@ -56,9 +56,9 @@ Funcionalidade: Autenticação de Funcionário
 
     Exemplos:
       | matricula | senha_cadastrada | senha_fornecida |
-      | 241020788 | Teste@1234      | teste1234       |
-      | 241020788 | Teste@1234      | TESTE@123       |
-      | 241020788 | Teste@1234      | test12345       |
+      | 123456-7 | Teste@1234      | teste1234       |
+      | 123456-7 | Teste@1234      | TESTE@123       |
+      | 123456-7 | Teste@1234      | test12345       |
 
   Cenário: Recusar a autenticação do aluno no sistema
     Quando preencho os campos de login com a matrícula estudantil e com a senha de acesso
@@ -76,5 +76,5 @@ Funcionalidade: Autenticação de Funcionário
     Exemplos:
       | matricula | senha      |
       |           | Teste@1234 |
-      | 241020788 |            |
+      | 123456-7 |            |
       |           |            |

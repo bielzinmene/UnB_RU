@@ -1,0 +1,30 @@
+!!! 5
+%html{ lang: "pt-BR" }
+  %head
+    %title= content_for(:title) || "UnB RU"
+    %meta{ name: "viewport", content: "width=device-width, initial-scale=1" }
+    = csrf_meta_tags
+    = csp_meta_tag
+    = yield :head
+    = stylesheet_link_tag :app, "data-turbo-track": "reload"
+  %body
+    %header.site-header
+      .header-inner
+        = link_to root_path, class: "brand", "aria-label": "UnB RU - início" do
+          %span.brand-mark RU
+          %span.brand-name UnB RU
+        %nav.main-nav{ "aria-label": "Navegação principal" }
+          = link_to "Início", root_path
+          = link_to "Cardápio", cardapio_path
+          = link_to "Cadastro de estudante", cadastro_path
+          - if usuario_atual&.estudante?
+            = button_to "Sair da conta", logout_estudante_path, method: :delete, class: "nav-button"
+          - else
+            = link_to "Entrar como estudante", login_estudante_path
+          = link_to "Área do funcionário", area_funcionario_path
+    %main.page-shell
+      - flash.each do |tipo, mensagem|
+        %p.flash{ role: "alert", class: (tipo.to_s == "notice" ? "flash-success" : "flash-error") }= mensagem
+      = yield
+    %footer.site-footer
+      %span Restaurante Universitário · Universidade de Brasília

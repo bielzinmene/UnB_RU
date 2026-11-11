@@ -1,0 +1,6 @@
+.form-page
+  .form-card.account-card
+    %p.eyebrow ÁREA DO FUNCIONÁRIO
+    %h1 Bem-vindo, #{usuario_atual.nome}.
+    %p.form-intro Seu acesso à área do funcionário está ativo.
+    = button_to "Encerrar sessão", logout_funcionario_path, method: :delete, class: "button button-outline"

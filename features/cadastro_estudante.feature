@@ -74,5 +74,5 @@ Funcionalidade: Cadastro de estudante
     Quando preencho o cadastro com nome "Ana Braz", matrícula "241020803", senha "Certa@123" e confirmação "Certa@123"
     E solicito a criação da conta
     Então o cadastro deve ser recusado
-    E devo ver a mensagem "Matricula já existente"
+    E devo ver a mensagem "Matrícula 241020803 já está cadastrada."
     E nenhuma outra conta deve ser criada com a matrícula "241020803"
