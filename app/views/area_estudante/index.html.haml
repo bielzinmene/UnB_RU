@@ -1,0 +1,40 @@
+- content_for :title, "Área do estudante | UnB RU"
+
+.page-heading
+  %div
+    %p.eyebrow ÁREA DO ESTUDANTE
+    %h1 Olá, #{usuario_atual.nome}!
+    %p.page-subtitle Consulte seu saldo e acesse os serviços da sua conta.
+
+.form-card
+  %h2 Saldo disponível
+
+  %p
+    %strong= number_to_currency(usuario_atual.saldo, unit: "R$ ", separator: ",", delimiter: ".")
+
+  %p
+    Matrícula:
+    = usuario_atual.matricula
+
+  - if usuario_atual.isento?
+    %p.info-note Você pertence ao grupo 1 e é isento de pagamento. Não é necessário realizar recargas.
+
+%section.quick-links{ "aria-label": "Serviços do estudante" }
+  - unless usuario_atual.isento?
+    = link_to new_recarga_path, class: "quick-card" do
+      %span.quick-icon R$
+      %h2 Adicionar créditos
+      %p Recarregue sua conta por PIX ou cartão de crédito.
+      %span.quick-arrow Recarregar →
+
+  = link_to cardapio_path, class: "quick-card" do
+    %span.quick-icon RU
+    %h2 Cardápio do dia
+    %p Consulte as refeições oferecidas pelo Restaurante Universitário.
+    %span.quick-arrow Consultar →
+
+  = link_to extrato_path, class: "quick-card" do
+    %span.quick-icon 03
+    %h2 Extrato e histórico
+    %p Consulte suas recargas e refeições realizadas.
+    %span.quick-arrow Consultar →

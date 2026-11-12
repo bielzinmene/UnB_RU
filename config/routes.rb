@@ -1,4 +1,14 @@
 Rails.application.routes.draw do
+  get "/estudante", to: "area_estudante#index", as: :area_estudante
+
+  resource :extrato, only: :show
+
+  resources :recargas, only: [ :new, :create, :show ] do
+    if Rails.env.development? || Rails.env.test?
+      post :confirmar_pix, on: :member
+    end
+  end
+
   root "portal#index"
   get "/cadastro", to: "cadastros#new", as: :cadastro
   post "/cadastro", to: "cadastros#create"

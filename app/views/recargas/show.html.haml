@@ -1,0 +1,50 @@
+- content_for :title, "Sua recarga | UnB RU"
+
+.form-page
+  .form-heading
+    %span.heading-icon R$
+    %span RESULTADO DA RECARGA
+
+  .form-card
+    %h1 Sua recarga
+
+    %p
+      Valor:
+      %strong= number_to_currency(@recarga.valor, unit: "R$ ", separator: ",", delimiter: ".")
+
+    %p
+      Forma de pagamento:
+      %strong= @recarga.pix? ? "PIX" : "Cartão de crédito"
+
+    - if @recarga.confirmada?
+      %p.info-note Recarga confirmada. Os créditos foram adicionados ao saldo.
+
+    - elsif @recarga.situacao == "cancelada"
+      %p.info-note Recarga cancelada por vencimento do prazo. Nenhum crédito foi adicionado.
+
+    - else
+      %p.info-note Aguardando confirmação do pagamento.
+
+      - if @recarga.pix?
+        .field
+          %label{ for: "codigo_pix" } Código PIX de demonstração
+          %textarea#codigo_pix{ readonly: true, rows: 3 }= @recarga.codigo_pix
+
+        %p
+          Válido até:
+          %strong= @recarga.expira_em.strftime("%d/%m/%Y %H:%M")
+
+        %p.privacy-note Código fictício, sem valor de pagamento. Não tente pagá-lo em um banco.
+
+        - if Rails.env.development? || Rails.env.test?
+          = button_to "Simular confirmação do PIX", confirmar_pix_recarga_path(@recarga), method: :post, class: "button button-primary"
+
+        %p.form-secondary
+          = link_to "Atualizar situação", recarga_path(@recarga)
+
+    %p
+      Saldo atual:
+      %strong= number_to_currency(usuario_atual.saldo, unit: "R$ ", separator: ",", delimiter: ".")
+
+    %p.form-secondary
+      = link_to "Fazer outra recarga", new_recarga_path

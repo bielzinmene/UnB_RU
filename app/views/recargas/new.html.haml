@@ -1,0 +1,65 @@
+- content_for :title, "Adicionar créditos | UnB RU"
+
+.form-page
+  .form-heading
+    %span.heading-icon R$
+    %span CRÉDITOS DO ESTUDANTE
+
+  .form-card
+    %p.eyebrow CONTA DO ESTUDANTE
+    %h1 Adicionar créditos
+    %p.form-intro Informe o valor e escolha a forma de pagamento.
+
+    %p
+      Saldo disponível:
+      %strong= number_to_currency(usuario_atual.saldo, unit: "R$ ", separator: ",", delimiter: ".")
+
+    %p.info-note Modo de demonstração: nenhum pagamento real será realizado. Utilize apenas dados fictícios.
+
+    = form_with url: recargas_path, class: "stacked-form", data: { turbo: false } do |form|
+      .field
+        = label_tag "recarga_valor", "Valor da recarga"
+        = text_field_tag "recarga[valor]", params.dig(:recarga, :valor), id: "recarga_valor", placeholder: "R$15,00", inputmode: "decimal"
+
+      %p.form-intro O saldo final não pode ultrapassar R$500,00. PIX pendentes também são considerados nesse limite.
+
+      %fieldset
+        %legend Forma de pagamento
+
+        %div
+          = radio_button_tag "recarga[forma_pagamento]", "pix", params.dig(:recarga, :forma_pagamento) != "cartao", id: "pagamento_pix"
+          = label_tag "pagamento_pix", "PIX"
+
+        %div
+          = radio_button_tag "recarga[forma_pagamento]", "cartao", params.dig(:recarga, :forma_pagamento) == "cartao", id: "pagamento_cartao"
+          = label_tag "pagamento_cartao", "Cartão de crédito"
+
+      %details{ open: params.dig(:recarga, :forma_pagamento) == "cartao" }
+        %summary Dados do cartão de crédito
+        %p.form-intro Preencha estes campos somente se escolher cartão.
+
+        .stacked-form
+          .field
+            = label_tag "cartao_numero", "Número do cartão"
+            = text_field_tag "cartao[numero]", nil, id: "cartao_numero", autocomplete: "off", inputmode: "numeric"
+
+          .field
+            = label_tag "cartao_cpf", "CPF do titular"
+            = text_field_tag "cartao[cpf]", nil, id: "cartao_cpf", autocomplete: "off"
+
+          .field
+            = label_tag "cartao_nome", "Nome no cartão"
+            = text_field_tag "cartao[nome]", nil, id: "cartao_nome", autocomplete: "off"
+
+          .field-row
+            .field
+              = label_tag "cartao_validade", "Data de validade"
+              = text_field_tag "cartao[validade]", nil, id: "cartao_validade", placeholder: "mm/aa", autocomplete: "off"
+
+            .field
+              = label_tag "cartao_cvv", "Código de segurança"
+              = password_field_tag "cartao[cvv]", nil, id: "cartao_cvv", autocomplete: "off", inputmode: "numeric"
+
+      = form.submit "Confirmar recarga", class: "button button-primary form-submit"
+
+    %p.privacy-note Os dados do cartão não são salvos. O código PIX de demonstração não pode ser pago em um banco.

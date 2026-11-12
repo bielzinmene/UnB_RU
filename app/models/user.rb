@@ -1,7 +1,28 @@
 class User < ApplicationRecord
   has_secure_password
 
+  has_many :recargas, dependent: :restrict_with_exception
+
+  has_many :consumos, dependent: :restrict_with_exception
+
   ROLES = %w[estudante funcionario administrador].freeze
+
+  #  grupos de pagamento da parte 2
+  GRUPOS_PAGAMENTO = {
+    isento: "1",
+    estudante_pagante: "2",
+    visitante: "3"
+  }.freeze
+
+  validates :saldo, numericality: {
+    greater_than_or_equal_to: 0,
+    less_than_or_equal_to: 500
+  }
+
+  validates :grupo_pagamento, inclusion: {
+    in: GRUPOS_PAGAMENTO.values
+  }
+  # grupos de pagamento da parte 2
 
   validates :nome, presence: { message: "nome completo é obrigatório" }
   validates :role, inclusion: { in: ROLES }
@@ -19,6 +40,12 @@ class User < ApplicationRecord
   def funcionario? = role == "funcionario"
   def operador? = funcionario? || role == "administrador"
 
+  # verificação de isenção da parte 2
+  def isento?
+    grupo_pagamento == GRUPOS_PAGAMENTO[:isento]
+  end
+  # verificação de isenção da parte 2
+
   def self.autenticar_funcionario(identificador, senha)
     return nil if identificador.blank? || senha.blank?
 
@@ -34,9 +61,11 @@ class User < ApplicationRecord
 
   def identificadores_nao_pertencem_a_outra_conta
     outras_contas = User.where.not(id: id)
+
     if siape.present? && outras_contas.exists?(sigaa: siape)
       errors.add(:siape, "já está cadastrado como usuário SIGAA em outra conta")
     end
+
     if sigaa.present? && outras_contas.exists?(siape: sigaa)
       errors.add(:sigaa, "já está cadastrado como matrícula SIAPE em outra conta")
     end
@@ -49,13 +78,17 @@ class User < ApplicationRecord
       errors.add(:matricula, "deve conter apenas dígitos numéricos")
       return
     end
+
     unless matricula.length == 9
       errors.add(:matricula, "deve ter exatamente 9 dígitos")
       return
     end
+
     errors.add(:matricula, "deve indicar o semestre 1 ou 2") unless %w[1 2].include?(matricula[2])
+
     ano = matricula[0, 2].to_i
     ano_atual = Date.current.year % 100
+
     errors.add(:matricula, "não pode indicar um ano futuro") if ano > ano_atual
   end
 
@@ -72,6 +105,9 @@ class User < ApplicationRecord
       "deve conter um dígito numérico" => password.match?(/\d/),
       "deve conter um caractere especial" => password.match?(/[^[:alnum:]]/)
     }
-    regras.each { |mensagem, valido| errors.add(:password, mensagem) unless valido }
+
+    regras.each do |mensagem, valido|
+      errors.add(:password, mensagem) unless valido
+    end
   end
 end
