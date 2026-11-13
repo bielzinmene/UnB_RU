@@ -1,4 +1,24 @@
 #!/usr/bin/env ruby
+ENV["CUCUMBER_OUTPUT_ENCODING"] ||= "UTF-8" if Gem.win_platform?
+
+# Use a temporary drive alias to avoid Windows Ruby failures with accented paths.
+app_root = File.expand_path("..", File.dirname(__FILE__))
+if Gem.win_platform? && !app_root.ascii_only?
+  drive = ("D".."Z").to_a.reverse.find { |letter| !File.exist?("#{letter}:/") }
+  abort "Nenhuma unidade disponível para executar o Rails." unless drive
+  drive = "#{drive}:"
+  abort "Não foi possível criar o caminho temporário do Rails." unless system("subst", drive, app_root)
+  begin
+    system("chcp 65001 > NUL")
+    output_encoding = { "CUCUMBER_OUTPUT_ENCODING" => ENV.fetch("CUCUMBER_OUTPUT_ENCODING", "UTF-8") }
+    system(output_encoding, Gem.ruby, "#{drive}/bin/rails", *ARGV, chdir: "#{drive}/")
+    status = $?.exitstatus || 1
+  ensure
+    system("subst", drive, "/D")
+  end
+  exit status
+end
+
 APP_PATH = File.expand_path("../config/application", __dir__)
 require_relative "../config/boot"
 require "rails/commands"

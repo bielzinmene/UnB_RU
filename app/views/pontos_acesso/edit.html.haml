@@ -1,0 +1,37 @@
+- content_for :title, "Editar ponto de acesso | UnB RU"
+
+.operation-header
+  .operation-heading
+    = image_tag "operacao/config-01.svg", class: "operation-icon", alt: ""
+    %div
+      %p.eyebrow CONFIGURAÇÃO DE PONTO
+      %h1 Editar #{@ponto_acesso.identificador}
+
+%section.operation-panel.operation-panel-narrow
+  - if @ponto_acesso.errors.any?
+    .validation-box
+      %ul
+        - @ponto_acesso.errors.full_messages.each do |mensagem|
+          %li= mensagem
+
+  = form_with model: @ponto_acesso, url: ponto_acesso_path(@ponto_acesso), method: :patch, class: "operation-form" do |form|
+    .field-row
+      .field
+        = form.label :identificador
+        = form.text_field :identificador
+      .field
+        = form.label :status
+        = form.select :status, PontoAcesso::STATUS
+    .field
+      = form.label :nome
+      = form.text_field :nome
+    .field-row
+      .field
+        = form.label :campus
+        = form.select :campus, Restaurante::CAMPI
+      .field
+        = form.label :restaurante_id, "Restaurante"
+        = form.collection_select :restaurante_id, @restaurantes, :id, :nome
+    .card-actions
+      = form.submit "Salvar alterações", class: "button button-primary"
+      = link_to "Cancelar", pontos_acesso_path, class: "button button-outline"

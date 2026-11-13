@@ -4,3 +4,12 @@
     %h1 Bem-vindo, #{usuario_atual.nome}.
     %p.form-intro Seu acesso à área do funcionário está ativo.
     = button_to "Encerrar sessão", logout_funcionario_path, method: :delete, class: "button button-outline"
+
+- if usuario_atual.administrador?
+  .operation-actions
+    = link_to "Configurar pontos de acesso", pontos_acesso_path, class: "button button-primary"
+    = link_to "Relatório global de operação", relatorio_operacao_path, class: "button button-outline"
+- elsif PontoAcesso.ativos.any?
+  .operation-actions
+    - PontoAcesso.ativos.order(:identificador).each do |ponto|
+      = button_to "Iniciar operação em #{ponto.identificador}", iniciar_operacao_path(ponto), class: "button button-primary"

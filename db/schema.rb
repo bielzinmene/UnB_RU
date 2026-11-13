@@ -10,7 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_12_000001) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_13_000001) do
+  create_table "acessos", force: :cascade do |t|
+    t.integer "ponto_acesso_id", null: false
+    t.integer "user_id"
+    t.string "matricula", null: false
+    t.datetime "ocorrido_em", null: false
+    t.string "refeicao", null: false
+    t.string "resultado", null: false
+    t.string "motivo"
+    t.decimal "valor_debitado", precision: 10, scale: 2, default: "0.0", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ocorrido_em", "refeicao"], name: "index_acessos_on_ocorrido_em_and_refeicao"
+    t.index ["ponto_acesso_id", "ocorrido_em"], name: "index_acessos_on_ponto_acesso_id_and_ocorrido_em"
+    t.index ["ponto_acesso_id"], name: "index_acessos_on_ponto_acesso_id"
+    t.index ["user_id"], name: "index_acessos_on_user_id"
+    t.check_constraint "resultado IN ('Liberado', 'Bloqueado')", name: "resultado_do_acesso_valido"
+    t.check_constraint "valor_debitado >= 0", name: "valor_debitado_do_acesso_valido"
+  end
+
   create_table "consumos", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "restaurante", null: false
@@ -23,6 +42,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_000001) do
     t.index ["user_id", "ocorrido_em"], name: "index_consumos_on_user_id_and_ocorrido_em"
     t.index ["user_id"], name: "index_consumos_on_user_id"
     t.check_constraint "valor_debitado >= 0", name: "valor_do_consumo_valido"
+  end
+
+  create_table "pontos_acessos", force: :cascade do |t|
+    t.integer "restaurante_id", null: false
+    t.string "identificador", null: false
+    t.string "nome", null: false
+    t.string "campus", null: false
+    t.string "status", default: "Ativo", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["identificador"], name: "index_pontos_acessos_on_identificador", unique: true
+    t.index ["restaurante_id"], name: "index_pontos_acessos_on_restaurante_id"
+    t.check_constraint "status IN ('Ativo', 'Inativo')", name: "status_do_ponto_de_acesso_valido"
   end
 
   create_table "recargas", force: :cascade do |t|
@@ -54,6 +86,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_000001) do
     t.index ["data", "tipo"], name: "index_refeicoes_on_data_and_tipo", unique: true
   end
 
+  create_table "restaurantes", force: :cascade do |t|
+    t.string "nome", null: false
+    t.string "campus", null: false
+    t.boolean "ativo", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["nome", "campus"], name: "index_restaurantes_on_nome_and_campus", unique: true
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "nome", null: false
     t.string "matricula"
@@ -72,6 +113,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_000001) do
     t.check_constraint "saldo >= 0 AND saldo <= 500", name: "saldo_dentro_do_limite"
   end
 
+  add_foreign_key "acessos", "pontos_acessos", column: "ponto_acesso_id"
+  add_foreign_key "acessos", "users"
   add_foreign_key "consumos", "users"
+  add_foreign_key "pontos_acessos", "restaurantes"
   add_foreign_key "recargas", "users"
 end

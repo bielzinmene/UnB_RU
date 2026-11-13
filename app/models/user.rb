@@ -38,6 +38,7 @@ class User < ApplicationRecord
 
   def estudante? = role == "estudante"
   def funcionario? = role == "funcionario"
+  def administrador? = role == "administrador"
   def operador? = funcionario? || role == "administrador"
 
   # verificação de isenção da parte 2

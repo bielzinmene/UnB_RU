@@ -19,6 +19,15 @@ Rails.application.routes.draw do
   post "/funcionario/login", to: "sessoes#create"
   delete "/funcionario/logout", to: "sessoes#destroy", as: :logout_funcionario
   get "/funcionario", to: "funcionarios#index", as: :area_funcionario
+  get "/pontos-de-acesso", to: "pontos_acesso#index", as: :pontos_acesso
+  post "/pontos-de-acesso", to: "pontos_acesso#create"
+  get "/pontos-de-acesso/:id/editar", to: "pontos_acesso#edit", as: :editar_ponto_acesso
+  patch "/pontos-de-acesso/:id", to: "pontos_acesso#update", as: :ponto_acesso
+  post "/operacao/iniciar/:id", to: "operacoes#iniciar", as: :iniciar_operacao
+  get "/operacao/terminal", to: "validacoes#show", as: :terminal_validacao
+  post "/operacao/terminal", to: "validacoes#create"
+  get "/operacao/historico", to: "historicos_locais#show", as: :historico_local
+  get "/relatorio-operacao", to: "relatorios_operacao#show", as: :relatorio_operacao
   get "/cardapio", to: "cardapios#show", as: :cardapio
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

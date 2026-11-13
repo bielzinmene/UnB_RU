@@ -16,4 +16,11 @@ class ApplicationController < ActionController::Base
   def exigir_funcionario
     redirect_to login_funcionario_path, alert: "Faça login como funcionário para continuar." unless usuario_atual&.operador?
   end
+
+  def exigir_administrador
+    unless usuario_atual&.administrador?
+      redirect_to login_funcionario_path,
+        alert: "Faça login como administrador para continuar."
+    end
+  end
 end

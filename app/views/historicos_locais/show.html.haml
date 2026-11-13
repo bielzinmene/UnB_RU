@@ -1,0 +1,36 @@
+- content_for :title, "Histórico local | UnB RU"
+
+.operation-header
+  .operation-heading
+    = image_tag "operacao/history-02.svg", class: "operation-icon operation-icon-light", alt: ""
+    %div
+      %p.eyebrow HISTÓRICO LOCAL
+      %h1 Histórico Local da #{@ponto_acesso.identificador}
+      %p.panel-subtitle #{@ponto_acesso.nome} · #{@ponto_acesso.campus}
+
+.metric-grid
+  .metric-card
+    = image_tag "operacao/history-04.svg", alt: ""
+    %small PASSAGENS REGISTRADAS
+    %strong= @acessos.size
+  .metric-card
+    = image_tag "operacao/history-06.svg", alt: ""
+    %small ACESSOS LIBERADOS
+    %strong= @liberados
+  .metric-card
+    = image_tag "operacao/history-08.svg", alt: ""
+    %small TOTAL DEBITADO
+    %strong= number_to_currency(@total_debitado, unit: "R$ ", separator: ",", delimiter: ".")
+
+%section.operation-panel
+  .panel-heading-row
+    %div
+      %h2 Registros da catraca
+      %p.panel-subtitle Auditoria restrita ao ponto atualmente gerenciado.
+    = link_to "Atualizar lista", historico_local_path, class: "button button-outline button-small"
+  - if @acessos.empty?
+    .operation-empty
+      %h3 Nenhum acesso registrado
+      %p Não existem acessos registrados para esta catraca.
+  - else
+    = render "tabela", acessos: @acessos

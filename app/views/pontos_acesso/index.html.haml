@@ -1,0 +1,62 @@
+- content_for :title, "Configuração de ponto | UnB RU"
+
+.operation-header
+  .operation-heading
+    = image_tag "operacao/config-01.svg", class: "operation-icon", alt: ""
+    %div
+      %p.eyebrow CONFIGURAÇÃO DE PONTO
+      %h1 Configuração de Ponto de Acesso
+  .operator-card
+    = image_tag "operacao/config-02.svg", alt: ""
+    %span
+      %small Administrador autenticado
+      %strong= usuario_atual.nome
+
+.operation-grid.operation-config-grid
+  %section.operation-panel
+    %span.step-badge 1
+    %h2 Cadastrar ponto de acesso
+    %p.panel-subtitle Informe os dados operacionais exigidos pelo sistema.
+
+    - if @ponto_acesso.errors.any?
+      .validation-box
+        %strong Não foi possível salvar a configuração.
+        %ul
+          - @ponto_acesso.errors.full_messages.each do |mensagem|
+            %li= mensagem
+
+    = form_with model: @ponto_acesso, url: pontos_acesso_path, class: "operation-form" do |form|
+      .field-row
+        .field
+          = form.label :identificador, "Identificador"
+          = form.text_field :identificador, placeholder: "RU05"
+        .field
+          = form.label :status
+          = form.select :status, PontoAcesso::STATUS, include_blank: "Selecione"
+      .field
+        = form.label :nome, "Nome"
+        = form.text_field :nome, placeholder: "Restaurante Universitário número 5"
+      .field-row
+        .field
+          = form.label :campus
+          = form.select :campus, Restaurante::CAMPI, include_blank: "Selecione"
+        .field
+          = form.label :restaurante_id, "Restaurante"
+          = form.collection_select :restaurante_id, @restaurantes, :id, :nome, include_blank: "Selecione"
+      = form.submit "Cadastrar ponto de acesso", class: "button button-primary"
+
+  %aside.operation-panel
+    %h2 Pontos configurados
+    %p.panel-subtitle Selecione um ponto ativo para iniciar a operação.
+    .access-point-list
+      - @pontos_acesso.each do |ponto|
+        .access-point-card
+          .access-point-card__title
+            %strong= ponto.identificador
+            %span.status-pill{ class: (ponto.ativo? ? "status-ok" : "status-error") }= ponto.status
+          %p= ponto.nome
+          %small #{ponto.campus} · #{ponto.restaurante.nome}
+          .card-actions
+            = link_to "Editar", editar_ponto_acesso_path(ponto), class: "button button-outline button-small"
+            - if ponto.ativo?
+              = button_to "Iniciar operação", iniciar_operacao_path(ponto), class: "button button-primary button-small"

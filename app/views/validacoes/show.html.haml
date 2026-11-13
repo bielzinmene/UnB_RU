@@ -1,0 +1,51 @@
+- content_for :title, "Terminal de validação | UnB RU"
+
+.operation-header
+  .operation-heading
+    = image_tag "operacao/terminal-01.svg", class: "operation-icon", alt: ""
+    %div
+      %p.eyebrow OPERAÇÃO ATIVA
+      %h1 #{@ponto_acesso.identificador} · #{@ponto_acesso.nome}
+      %p.panel-subtitle #{@ponto_acesso.campus} · Tarifa base: R$ 2,50
+  .official-clock
+    %small HORÁRIO OFICIAL
+    %strong= Time.current.strftime("%H:%M:%S")
+
+.terminal-grid
+  %section.operation-panel.reader-panel
+    %h2 Leitura da identificação do estudante
+    = image_tag "operacao/terminal-04.svg", class: "reader-illustration", alt: "Leitor de identificação"
+    = form_with url: terminal_validacao_path, class: "operation-form" do |form|
+      .field
+        = form.label :matricula, "Matrícula"
+        = form.text_field :matricula, required: true, autofocus: true, placeholder: "251024222", inputmode: "numeric"
+      = form.submit "Validar entrada", class: "button button-primary"
+
+  %section.operation-panel.validation-result
+    - if @ultimo_acesso
+      .access-result{ class: (@ultimo_acesso.liberado? ? "access-granted" : "access-denied") }
+        = image_tag(@ultimo_acesso.liberado? ? "operacao/terminal-06.svg" : "operacao/terminal-07.svg", alt: "")
+        %div
+          %strong= @ultimo_acesso.liberado? ? "ACESSO LIBERADO" : "ACESSO NEGADO"
+          %span= @ultimo_acesso.motivo || "Débito realizado com sucesso"
+      .result-details
+        %div
+          %small MATRÍCULA
+          %strong= @ultimo_acesso.matricula
+        %div
+          %small SALDO ATUAL
+          %strong= @ultimo_acesso.user ? number_to_currency(@ultimo_acesso.user.reload.saldo, unit: "R$ ", separator: ",", delimiter: ".") : "—"
+        %div
+          %small REFEIÇÃO
+          %strong= @ultimo_acesso.refeicao
+    - else
+      .empty-validation
+        = image_tag "operacao/terminal-05.svg", alt: ""
+        %h2 Aguardando leitura
+        %p O resultado da próxima validação será exibido aqui.
+
+%section.operation-panel.history-preview
+  .panel-heading-row
+    %h2 Últimas validações registradas
+    = link_to "Ver histórico completo", historico_local_path, class: "button button-outline button-small"
+  = render "historicos_locais/tabela", acessos: @ultimos_acessos

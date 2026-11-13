@@ -23,6 +23,12 @@
           - else
             = link_to "Entrar como estudante", login_estudante_path
           = link_to "Área do funcionário", area_funcionario_path
+          - if usuario_atual&.operador?
+            = link_to "Terminal", terminal_validacao_path
+            = link_to "Histórico local", historico_local_path
+          - if usuario_atual&.administrador?
+            = link_to "Pontos de acesso", pontos_acesso_path
+            = link_to "Relatório global", relatorio_operacao_path
     %main.page-shell
       - flash.each do |tipo, mensagem|
         %p.flash{ role: "alert", class: (tipo.to_s == "notice" ? "flash-success" : "flash-error") }= mensagem
