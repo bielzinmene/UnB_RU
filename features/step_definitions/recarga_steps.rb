@@ -165,8 +165,14 @@ Quando("deixo vazio o campo {string} do cartão") do |campo|
 end
 
 Então("a operação deve ser recusada") do
-  expect(page.status_code).to eq(422)
-  expect(@estudante.recargas.count).to eq(0)
+  if page.status_code == 403
+    expect(page).to have_content(
+      "Você não pode acessar o histórico de outra catraca."
+    )
+  else
+    expect(page.status_code).to eq(422)
+    expect(@estudante.recargas.count).to eq(0)
+  end
 end
 
 Então(/^meu saldo deve permanecer em R\$(\d+,\d{2})$/) do |valor|

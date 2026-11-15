@@ -1,0 +1,65 @@
+- content_for :title, "Relatório global de operação | UnB RU"
+
+.operation-header
+  .operation-heading
+    = image_tag "operacao/report-01.svg", class: "operation-icon operation-icon-light", alt: ""
+    %div
+      %p.eyebrow ADMINISTRAÇÃO GERAL
+      %h1 Relatório Global de Operação
+  = link_to "Exportar PDF Oficial", relatorio_operacao_path(format: :pdf, data: @data, turno: @turno, campus: @campus), class: "button button-primary"
+
+%section.operation-panel.report-filters
+  = form_with url: relatorio_operacao_path, method: :get, class: "filter-grid" do |form|
+    .field
+      = form.label :data, "Data contábil"
+      = form.date_field :data, value: @data.iso8601
+    .field
+      = form.label :turno, "Janela de serviço"
+      = form.select :turno, RelatorioOperacao::TURNOS, selected: @turno
+    .field
+      = form.label :campus, "Campus"
+      = form.select :campus, Restaurante::CAMPI, selected: @campus
+    = form.submit "Aplicar filtros", class: "button button-outline"
+
+.metric-grid.report-metrics
+  .metric-card
+    = image_tag "operacao/report-03.svg", alt: ""
+    %small TOTAL DE ACESSOS
+    %strong= @relatorio.acessos.size
+  .metric-card
+    = image_tag "operacao/report-04.svg", alt: ""
+    %small ARRECADAÇÃO GLOBAL
+    %strong= number_to_currency(@relatorio.total_arrecadado, unit: "R$ ", separator: ",", delimiter: ".")
+  .metric-card
+    = image_tag "operacao/report-05.svg", alt: ""
+    %small ACESSOS LIBERADOS
+    %strong= @relatorio.liberados.size
+  .metric-card
+    = image_tag "operacao/report-06.svg", alt: ""
+    %small ACESSOS BLOQUEADOS
+    %strong= @relatorio.bloqueados.size
+
+%section.operation-panel
+  %h2 Consolidação Operacional dos Restaurantes
+  - if @relatorio.vazio?
+    .operation-empty
+      %h3 Não há operação no período
+      %p Ajuste os filtros para consultar registros de acesso.
+  - else
+    .operation-table-wrap
+      %table.operation-table
+        %thead
+          %tr
+            %th Restaurante
+            %th Acessos
+            %th Liberados
+            %th Bloqueados
+            %th Arrecadação
+        %tbody
+          - @relatorio.restaurantes.each do |nome, acessos|
+            %tr
+              %td= nome
+              %td= acessos.size
+              %td= acessos.count(&:liberado?)
+              %td= acessos.reject(&:liberado?).size
+              %td= number_to_currency(acessos.sum(&:valor_debitado), unit: "R$ ", separator: ",", delimiter: ".")

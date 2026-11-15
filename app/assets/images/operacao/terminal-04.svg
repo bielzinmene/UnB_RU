@@ -1,0 +1,24 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="SVG QR Code de Teste" clip-path="url(#clip0_0_30)">
+<path id="Vector" d="M0 0H38.4V38.4H0V0M7.68 7.68V30.72H30.72V7.68H7.68M12.8 12.8H25.6V25.6H12.8V12.8" fill="#1B1B1B"/>
+<path id="Vector_2" d="M89.6 0H128V38.4H89.6V0M97.28 7.68V30.72H120.32V7.68H97.28M102.4 12.8H115.2V25.6H102.4V12.8" fill="#1B1B1B"/>
+<path id="Vector_3" d="M0 89.6H38.4V128H0V89.6M7.68 97.28V120.32H30.72V97.28H7.68M12.8 102.4H25.6V115.2H12.8V102.4" fill="#1B1B1B"/>
+<path id="Vector_4" d="M51.2 12.8H61.44V12.8V23.04V23.04H51.2V23.04V12.8V12.8V12.8" fill="#1B1B1B"/>
+<path id="Vector_5" d="M66.56 12.8H76.8V12.8V35.84V35.84H66.56V35.84V12.8V12.8V12.8" fill="#1B1B1B"/>
+<path id="Vector_6" d="M51.2 30.72H61.44V30.72V46.08V46.08H51.2V46.08V30.72V30.72V30.72" fill="#1B1B1B"/>
+<path id="Vector_7" d="M12.8 51.2H23.04V51.2V71.68V71.68H12.8V71.68V51.2V51.2V51.2" fill="#1B1B1B"/>
+<path id="Vector_8" d="M30.72 56.32H46.08V56.32V66.56V66.56H30.72V66.56V56.32V56.32V56.32" fill="#1B1B1B"/>
+<path id="Vector_9" d="M56.32 56.32H71.68V56.32V71.68V71.68H56.32V71.68V56.32V56.32V56.32" fill="#1B1B1B"/>
+<path id="Vector_10" d="M81.92 51.2H92.16V51.2V81.92V81.92H81.92V81.92V51.2V51.2V51.2" fill="#1B1B1B"/>
+<path id="Vector_11" d="M99.84 56.32H117.76V56.32V66.56V66.56H99.84V66.56V56.32V56.32V56.32" fill="#1B1B1B"/>
+<path id="Vector_12" d="M51.2 89.6H61.44V89.6V112.64V112.64H51.2V112.64V89.6V89.6V89.6" fill="#1B1B1B"/>
+<path id="Vector_13" d="M66.56 97.28H89.6V97.28V107.52V107.52H66.56V107.52V97.28V97.28V97.28" fill="#1B1B1B"/>
+<path id="Vector_14" d="M97.28 89.6H107.52V89.6V99.84V99.84H97.28V99.84V89.6V89.6V89.6" fill="#1B1B1B"/>
+<path id="Vector_15" d="M112.64 97.28H122.88V97.28V117.76V117.76H112.64V117.76V97.28V97.28V97.28" fill="#1B1B1B"/>
+</g>
+<defs>
+<clipPath id="clip0_0_30">
+<rect width="128" height="128" fill="white"/>
+</clipPath>
+</defs>
+</svg>

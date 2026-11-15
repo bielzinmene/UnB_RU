@@ -1,0 +1,19 @@
+.operation-table-wrap
+  %table.operation-table
+    %thead
+      %tr
+        %th Data e hora
+        %th Matrícula
+        %th Refeição
+        %th Valor
+        %th Resultado
+    %tbody
+      - acessos.each do |acesso|
+        %tr{ class: (acesso.liberado? ? nil : "row-denied") }
+          %td= acesso.ocorrido_em.strftime("%d/%m/%Y %H:%M:%S")
+          %td= acesso.matricula
+          %td= acesso.refeicao
+          %td= number_to_currency(acesso.valor_debitado, unit: "R$ ", separator: ",", delimiter: ".")
+          %td
+            %span.status-pill{ class: (acesso.liberado? ? "status-ok" : "status-error") }
+              = acesso.motivo.presence || acesso.resultado

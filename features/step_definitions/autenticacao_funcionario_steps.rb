@@ -77,7 +77,11 @@ Quando("tento acessar uma funcionalidade protegida") do
 end
 
 Então("o acesso deve ser negado") do
-  expect(page).to have_current_path(login_funcionario_path)
+  if defined?(@acesso_operacional) && @acesso_operacional
+    expect(@acesso_operacional).not_to be_liberado
+  else
+    expect(page).to have_current_path(login_funcionario_path)
+  end
 end
 
 Dado("que não existe funcionário com a matrícula SIAPE {string}") do |siape|
