@@ -28,6 +28,7 @@
             = link_to "Histórico local", historico_local_path
           - if usuario_atual&.administrador?
             = link_to "Pontos de acesso", pontos_acesso_path
+            = link_to "Turnos FastPass", turnos_fastpass_index_path
             = link_to "Relatório global", relatorio_operacao_path
     %main.page-shell
       - flash.each do |tipo, mensagem|
