@@ -27,8 +27,10 @@ RSpec.describe "Confirmação do resultado FastPass", type: :request do
       password: "Teste@1234")
     post login_funcionario_path, params: { identificador: admin.siape, senha: "Teste@1234" }
 
+    inscricao
     get turnos_fastpass_index_path
     expect(response).to have_http_status(:ok)
+    expect(response.body).to include("Confirmar resultado", "Ana")
 
     post resultado_turno_fastpass_path(turno), params: { ganhadores: [ inscricao.id ] }
 

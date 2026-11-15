@@ -41,6 +41,19 @@ RSpec.describe "Resultado e notificações FastPass" do
     expect(turno.reload.sorteio_concluido_em).to be_nil
   end
 
+  it "impede novas inscrições após a confirmação do resultado" do
+    ana = inscrever("Ana", "241020803")
+    ConfirmarResultadoFastpass.executar(turno: turno, ids_sorteados: [ ana.id ])
+    novo_estudante = User.create!(nome: "Carla", matricula: "251010205", role: "estudante",
+      password: "Teste@1234", password_confirmation: "Teste@1234")
+
+    nova = InscricaoFastpass.new(user: novo_estudante, turno_fastpass: turno,
+      faixa_fastpass: faixa)
+
+    expect(nova).not_to be_valid
+    expect(nova.errors[:turno_fastpass]).to be_present
+  end
+
   it "notifica uma hora antes e não duplica ao processar novamente" do
     ana = inscrever("Ana", "241020803")
     bruno = inscrever("Bruno", "231010204")
