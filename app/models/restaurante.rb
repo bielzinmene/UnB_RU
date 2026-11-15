@@ -1,5 +1,5 @@
 class Restaurante < ApplicationRecord
-  CAMPI = [ "UnB Darcy Ribeiro", "Campus Darcy Ribeiro" ].freeze
+  CAMPI = [ "UnB Darcy Ribeiro", "Campus Darcy Ribeiro", "Planaltina", "Gama", "Ceilândia" ].freeze
 
   has_many :pontos_acesso,
     class_name: "PontoAcesso",

@@ -30,14 +30,14 @@ Cenário: Recusar restaurante já cadastrado
 
   Dado que existe um restaurante com ID "1"
   Quando tento cadastrar o restaurante de ID "1"
-  Então o cadastro deve ser recusado
+  Então o cadastro do restaurante ou catraca deve ser recusado
   E devo ser informado que o restaurante já existe
 
 Cenário: Recusar catraca já cadastrada
 
   Dado que existe uma catraca com ID "1"
   Quando tento cadastrar a catraca de ID "1"
-  Então o cadastro deve ser recusado
+  Então o cadastro do restaurante ou catraca deve ser recusado
   E devo ser informado que a catraca já existe
 
 
@@ -46,7 +46,7 @@ Esquema do Cenário: Recusar ID fora do intervalo
   Dado que estou autenticado como administrador
   Quando tento cadastrar o restaurante com ID "<id_restaurante>"
   E tento cadastrar a catraca com ID "<id_catraca>"
-  Então o cadastro deve ser recusado
+  Então o cadastro do restaurante ou catraca deve ser recusado
   E devo ser informado que o ID é inválido
 
   Exemplos:
@@ -70,5 +70,5 @@ Cenário: Recusar restaurante sem catraca
   Dado que estou autenticado como administrador
   Quando cadastro o restaurante de ID "1"
   E não associo uma catraca
-  Então o cadastro deve ser recusado
+  Então o cadastro do restaurante ou catraca deve ser recusado
   E devo ser informado que o restaurante precisa de uma catraca

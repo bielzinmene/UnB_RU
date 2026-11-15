@@ -1,0 +1,33 @@
+.form-page
+  .form-card.account-card
+    %p.eyebrow ADMINISTRAÇÃO · FASTPASS
+    %h1 Gestão de Turnos e Faixas
+    %p.form-intro Configure os horários dos turnos e divida-os em faixas de distribuição do FastPass.
+
+    = form_with url: turnos_fastpass_index_path, method: :post do |f|
+      .field
+        = f.label :data, "Data"
+        = f.date_field :data, required: true
+      .field
+        = f.label :tipo_refeicao, "Turno / Refeição"
+        = f.select :tipo_refeicao, ["Café da Manhã", "Almoço", "Jantar"]
+      .field
+        = f.label :inicio, "Horário de Início"
+        = f.text_field :inicio, placeholder: "11:00", required: true
+      .field
+        = f.label :fim, "Horário de Fim"
+        = f.text_field :fim, placeholder: "14:00", required: true
+      = f.submit "Definir Turno", class: "button"
+
+    %hr
+    - @turnos.each do |turno|
+      .card-item
+        %h3= "#{turno.tipo_refeicao} — #{I18n.l(turno.data)} (#{turno.inicio} às #{turno.fim})"
+        %ul
+          - turno.faixas_fastpass.order(:inicio).each do |faixa|
+            %li= "#{faixa.inicio} às #{faixa.fim}"
+
+        = form_with url: admin_turno_fastpass_faixas_fastpass_path(turno), method: :post do |f|
+          = f.text_field :inicio, placeholder: "Início (ex: 11:00)"
+          = f.text_field :fim, placeholder: "Fim (ex: 11:30)"
+          = f.submit "Adicionar Faixa", class: "button button-outline"

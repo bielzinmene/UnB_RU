@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_13_000001) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_14_000001) do
   create_table "acessos", force: :cascade do |t|
     t.integer "ponto_acesso_id", null: false
     t.integer "user_id"
@@ -42,6 +42,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_000001) do
     t.index ["user_id", "ocorrido_em"], name: "index_consumos_on_user_id_and_ocorrido_em"
     t.index ["user_id"], name: "index_consumos_on_user_id"
     t.check_constraint "valor_debitado >= 0", name: "valor_do_consumo_valido"
+  end
+
+  create_table "faixas_fastpass", force: :cascade do |t|
+    t.integer "turno_fastpass_id", null: false
+    t.string "inicio", null: false
+    t.string "fim", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["turno_fastpass_id"], name: "index_faixas_fastpass_on_turno_fastpass_id"
   end
 
   create_table "pontos_acessos", force: :cascade do |t|
@@ -95,6 +104,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_000001) do
     t.index ["nome", "campus"], name: "index_restaurantes_on_nome_and_campus", unique: true
   end
 
+  create_table "turnos_fastpass", force: :cascade do |t|
+    t.date "data", null: false
+    t.string "tipo_refeicao", null: false
+    t.string "inicio", null: false
+    t.string "fim", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["data", "tipo_refeicao"], name: "index_turnos_fastpass_on_data_and_tipo_refeicao", unique: true
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "nome", null: false
     t.string "matricula"
@@ -116,6 +135,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_000001) do
   add_foreign_key "acessos", "pontos_acessos", column: "ponto_acesso_id"
   add_foreign_key "acessos", "users"
   add_foreign_key "consumos", "users"
+  add_foreign_key "faixas_fastpass", "turnos_fastpass", column: "turno_fastpass_id"
   add_foreign_key "pontos_acessos", "restaurantes"
   add_foreign_key "recargas", "users"
 end
