@@ -1,121 +1,63 @@
 # Sprint 2 — Saldo do estudante
 
-Responsável: Fernanda — preencher nome completo e matrícula.
+## O que foi feito
 
-## Funcionalidades implementadas
+- Área do estudante com saldo e acesso aos serviços.
+- Recarga por PIX e cartão em modo de demonstração.
+- Extrato de recargas e histórico de refeições.
+- Exportação dos registros em PDF.
 
-- Recarga por PIX e cartão de crédito em modo de demonstração.
-- Área do estudante com saldo e acesso às funcionalidades.
-- Extrato de recargas confirmadas.
-- Histórico de refeições consumidas.
-- Exportação do extrato e histórico em PDF.
+É necessário entrar como estudante para acessar essas páginas. Cada pessoa vê apenas seus próprios dados.
 
-## Regras de acesso
+## Grupos de pagamento
 
-As páginas financeiras exigem login como estudante.
+- **Grupo 1:** isento.
+- **Grupo 2:** estudante pagante.
+- **Grupo 3:** visitante.
 
-Cada estudante consulta somente seus próprios registros.
+O grupo 1 está definido nos BDDs. Os grupos 2 e 3 foram definidos durante a implementação.
 
-O grupo de pagamento é diferente do papel do usuário:
-
-- Grupo 1: isento.
-- Grupo 2: estudante pagante.
-- Grupo 3: visitante.
-
-O grupo 1 é especificado nos BDDs. A classificação dos grupos 2 e 3
-foi uma decisão de implementação do projeto.
-
-Novas contas recebem grupo 2 por padrão. A classificação oficial
-deverá ser atribuída por uma fonte autorizada.
-
-Cadastro e acesso de visitantes não foram implementados nesta parte.
-Ter grupo 3 não concede acesso à área do estudante.
+Novas contas começam no grupo 2. Ainda falta definir como será atribuída a classificação oficial de cada pessoa. O cadastro e o acesso de visitantes não fazem parte desta implementação.
 
 ## Recargas
 
-O valor deve ser positivo. O saldo não pode ultrapassar R$500,00.
+O valor da recarga deve ser positivo e o saldo final não pode passar de R$500,00. PIX pendentes também entram nessa verificação, mas só aumentam o saldo depois da confirmação.
 
-PIX pendentes também são considerados na verificação do limite,
-mas não aumentam o saldo disponível até serem confirmados.
+Estudantes isentos não podem fazer recargas.
 
-Estudantes do grupo 1 não podem realizar recargas.
+No cartão, são verificados número, CPF, nome, validade e CVV. Esses dados não são salvos no banco e ficam ocultos nos logs.
 
-O cartão verifica número, CPF, nome, validade e CVV.
-Os dados não são persistidos e o grupo de parâmetros `cartao`
-é filtrado dos logs.
+### Simulação dos pagamentos
 
-### Pagamentos de demonstração
+Não há cobrança real nem integração com banco.
 
-Não existe integração bancária ou cobrança real.
+O PIX gera um código fictício. Para confirmar o pagamento, usamos o botão de simulação. No cartão, dados válidos recebem uma aprovação simulada, sem consulta de limite ou titularidade.
 
-O código PIX é fictício e não pode ser pago em um banco.
-O botão de simulação representa a confirmação do pagamento.
+A simulação funciona apenas em desenvolvimento e teste.
 
-Cartões com dados aceitos pelas validações recebem aprovação
-fictícia. Não são consultados limite bancário, existência do
-cartão ou titularidade.
+### Vencimento do PIX
 
-A simulação funciona somente em desenvolvimento e teste.
+O PIX vence em dez minutos. Depois disso, a confirmação é recusada e nenhum crédito é adicionado. Confirmar duas vezes a mesma recarga também não duplica o saldo.
 
-### Expiração do PIX
+O cancelamento é agendado pelo `CancelarPixExpiradosJob`, que chama o serviço `CancelarPixExpirados`.
 
-O prazo normal é de dez minutos.
+Em desenvolvimento, a fila funciona em memória. Se o processo Rails for encerrado, os agendamentos são perdidos. Abrir uma recarga ou solicitar outra também verifica os vencimentos. Para manter os agendamentos após reinícios, será necessário configurar uma fila persistente.
 
-Após salvar uma recarga PIX, o modelo agenda
-`CancelarPixExpiradosJob` para o vencimento.
+## Extrato, histórico e PDF
 
-O serviço `CancelarPixExpirados` cancela os PIX pendentes vencidos
-sem alterar o saldo.
+O extrato mostra as recargas confirmadas. O histórico mostra as refeições consumidas. As duas listas aparecem do registro mais recente para o mais antigo.
 
-A confirmação também verifica o prazo, impedindo crédito atrasado.
-Confirmar novamente uma recarga já confirmada não duplica o crédito.
+O PDF usa os mesmos dados da tela e inclui nome e matrícula do estudante. Ele pode ser gerado com apenas recargas ou apenas refeições. Se não houver nenhum registro, o sistema informa isso e não gera o arquivo.
 
-Em desenvolvimento, a fila AsyncAdapter executa dentro do processo
-Rails. Reiniciar ou parar esse processo perde os agendamentos
-em memória.
+A exportação exige login e não permite consultar os dados de outra matrícula.
 
-A abertura de uma recarga e a solicitação de nova recarga também
-verificam vencimentos. Para uma implantação com persistência dos
-agendamentos, será necessário configurar uma fila persistente
-e seu processador.
+A fonte usada no PDF e sua licença estão em `app/assets/fonts`.
 
-## Extrato e histórico
+## Integração com a catraca
 
-O extrato mostra apenas recargas confirmadas, pela data de confirmação.
-
-O histórico mostra os consumos pela data da passagem.
-
-Ambos são ordenados do mais recente para o mais antigo.
-
-As consultas usam as associações do usuário autenticado.
-Não há uma segunda tabela copiando os dados do extrato.
-
-O modelo `Refeicao`, da parte 1, representa o cardápio.
-O modelo `Consumo` representa uma refeição consumida pelo estudante.
-
-## PDF
-
-O documento contém identificação do estudante, recargas e refeições.
-
-É permitido gerar PDF com somente recargas ou somente refeições.
-Se ambas as listas estiverem vazias, a exportação é recusada.
-
-Sem autenticação ou ao solicitar outra matrícula, nenhum PDF é enviado.
-
-A fonte DejaVu é incorporada ao documento.
-Os arquivos e sua licença ficam em `app/assets/fonts`.
-
-## Integração com a parte 3 — catraca
-
-Após validar as regras de entrada, a parte 3 deverá registrar
-o consumo pelo serviço abaixo:
+A parte 3 usa `RegistrarConsumo` para registrar a refeição e descontar o saldo:
 
 ```ruby
-estudante = User.find_by!(
-  matricula: "251099001",
-  role: "estudante"
-)
-
 RegistrarConsumo.executar(
   usuario: estudante,
   restaurante: "RU Central",
@@ -125,28 +67,15 @@ RegistrarConsumo.executar(
 )
 ```
 
-O serviço registra o consumo e desconta o saldo na mesma transação.
-Não se deve criar o consumo e atualizar o saldo em comandos separados.
+O serviço faz o registro e o desconto na mesma transação. Não deve haver outro desconto fora dele.
 
-A referência deve identificar a passagem de forma única e estável.
-Em uma repetição da operação, deve ser enviada a mesma referência.
+A referência identifica a passagem. Se a operação for repetida, deve usar a mesma referência para evitar outra cobrança. Para isentos, o valor deve ser `"0.00"`.
 
-Repetir a referência com os mesmos dados não gera outro desconto.
-Reutilizá-la com outro usuário, restaurante ou valor é recusado.
+Depois do registro, a refeição aparece no histórico e no PDF do estudante. As regras de entrada, turno e FastPass são verificadas pela operação da catraca.
 
-Para o grupo 1, o valor deve ser zero. Cobranças positivas são recusadas.
+O modelo `Refeicao` guarda o cardápio. O modelo `Consumo` guarda as refeições realizadas pelos estudantes.
 
-O serviço verifica saldo suficiente, mas não libera catracas
-nem valida turno, FastPass ou autorização de entrada.
-Essas regras pertencem à operação da catraca.
-
-O restaurante é registrado como nome histórico. A parte 3 poderá
-vincular o consumo aos seus registros de acesso e restaurante.
-
-SQLite pode apresentar erro de bloqueio em escritas concorrentes.
-Uma tentativa repetida deve conservar a mesma referência da passagem.
-
-## Executar a aplicação
+## Como rodar
 
 ```bash
 bundle install
@@ -155,39 +84,34 @@ bin/rails db:seed
 bin/rails server
 ```
 
-A área do estudante fica em `/estudante`.
-A recarga fica em `/recargas/new`.
-O extrato fica em `/extrato`.
-O PDF é solicitado por `/extrato.pdf`.
+Abra `http://localhost:3000`.
+
+- Área do estudante: `/estudante`
+- Recarga: `/recargas/new`
+- Extrato e histórico: `/extrato`
+- PDF: `/extrato.pdf`
 
 ## Testes
+
+Prepare o banco de teste e execute o RSpec:
 
 ```bash
 RAILS_ENV=test bin/rails db:prepare
 bundle exec rspec
 ```
 
-BDD da parte 2:
+Para rodar os BDDs da parte 2:
 
 ```bash
 bundle exec cucumber features/recarga_de_saldo.feature features/extrato-e-historico.feature features/exportacao_pdf_historico_estudante.feature --publish-quiet
 ```
 
-São 30 casos BDD, contando as linhas das tabelas de exemplos:
+São 30 casos, contando os exemplos das tabelas: 20 de recarga, 3 de extrato e histórico e 7 de PDF.
 
-- Recarga: 20.
-- Extrato e histórico: 3.
-- PDF: 7.
-
-Os testes usam banco separado do ambiente de desenvolvimento.
+Os testes usam um banco separado do desenvolvimento.
 
 ## Uso de IA
 
-Ferramenta utilizada: ChatGPT/Codex.
+Utilizei o ChatGPT/Codex para esclarecer dúvidas sobre os BDDs e auxiliar na escrita e revisão do código, dos testes e da documentação.
 
-Apoio na interpretação dos BDDs, implementação de migrations,
-modelos, serviços, controllers, telas, testes e documentação.
-
-Estratégia: desenvolvimento incremental, com explicação de cada
-arquivo, testes manuais no console e navegador, testes RSpec
-e execução dos cenários Cucumber.
+O desenvolvimento foi feito por etapas no VS Code, acompanhando as explicações e verificando os resultados no console, no navegador, no RSpec e no Cucumber.
