@@ -13,3 +13,6 @@ pt-BR:
     messages:
       confirmation: "é diferente da senha"
       blank: "é obrigatório"
+  date:
+    formats:
+      default: "%d/%m/%Y"
