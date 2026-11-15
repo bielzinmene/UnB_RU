@@ -9,6 +9,17 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :admin do
+    resources :restaurantes, only: [ :index, :create, :destroy ] do
+      post :associar_catraca, on: :member
+    end
+    resources :catracas, only: [ :create, :destroy ]
+    resources :turnos_fastpass, only: [ :index, :create ] do
+      resources :faixas_fastpass, only: [ :create ]
+    end
+    resource :relatorio_acessos, only: [ :show ]
+  end
+
   root "portal#index"
   get "/cadastro", to: "cadastros#new", as: :cadastro
   post "/cadastro", to: "cadastros#create"
