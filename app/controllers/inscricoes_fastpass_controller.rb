@@ -3,7 +3,7 @@ class InscricoesFastpassController < ApplicationController
 
   def index
     @turnos = TurnoFastpass.includes(:faixas_fastpass).order(:data, :inicio)
-    @inscricoes = usuario_atual.inscricoes_fastpass.includes(:turno_fastpass, :faixa_fastpass)
+    @inscricoes = usuario_atual.inscricoes_fastpass.includes(:turno_fastpass, :faixa_fastpass, :notificacao_fastpass)
       .order(created_at: :desc)
   end
 

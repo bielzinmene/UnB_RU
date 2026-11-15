@@ -4,6 +4,7 @@ class InscricaoFastpass < ApplicationRecord
   belongs_to :user
   belongs_to :turno_fastpass
   belongs_to :faixa_fastpass
+  has_one :notificacao_fastpass, dependent: :destroy
 
   validates :user_id, uniqueness: { scope: :turno_fastpass_id,
     message: "já possui inscrição para este dia e turno" }

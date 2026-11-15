@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_15_000001) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_15_000002) do
   create_table "acessos", force: :cascade do |t|
     t.integer "ponto_acesso_id", null: false
     t.integer "user_id"
@@ -59,10 +59,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_15_000001) do
     t.integer "faixa_fastpass_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "sorteado"
     t.index ["faixa_fastpass_id"], name: "index_inscricoes_fastpass_on_faixa_fastpass_id"
     t.index ["turno_fastpass_id"], name: "index_inscricoes_fastpass_on_turno_fastpass_id"
     t.index ["user_id", "turno_fastpass_id"], name: "index_inscricoes_fastpass_on_user_and_turno", unique: true
     t.index ["user_id"], name: "index_inscricoes_fastpass_on_user_id"
+  end
+
+  create_table "notificacoes_fastpass", force: :cascade do |t|
+    t.integer "inscricao_fastpass_id", null: false
+    t.string "mensagem", null: false
+    t.datetime "enviada_em", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["inscricao_fastpass_id"], name: "index_notificacoes_fastpass_on_inscricao_fastpass_id", unique: true
   end
 
   create_table "pontos_acessos", force: :cascade do |t|
@@ -123,6 +133,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_15_000001) do
     t.string "fim", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "sorteio_concluido_em"
     t.index ["data", "tipo_refeicao"], name: "index_turnos_fastpass_on_data_and_tipo_refeicao", unique: true
   end
 
@@ -151,6 +162,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_15_000001) do
   add_foreign_key "inscricoes_fastpass", "faixas_fastpass", column: "faixa_fastpass_id"
   add_foreign_key "inscricoes_fastpass", "turnos_fastpass", column: "turno_fastpass_id"
   add_foreign_key "inscricoes_fastpass", "users"
+  add_foreign_key "notificacoes_fastpass", "inscricoes_fastpass", column: "inscricao_fastpass_id"
   add_foreign_key "pontos_acessos", "restaurantes"
   add_foreign_key "recargas", "users"
 end
