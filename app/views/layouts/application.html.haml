@@ -29,6 +29,9 @@
           - if usuario_atual&.administrador?
             = link_to "Pontos de acesso", pontos_acesso_path
             = link_to "Relatório global", relatorio_operacao_path
+            = link_to "Restaurantes e Catracas", restaurantes_path
+            = link_to "Turnos FastPass", turnos_fastpass_index_path
+            = link_to "Relatório Admin", relatorio_acessos_path
     %main.page-shell
       - flash.each do |tipo, mensagem|
         %p.flash{ role: "alert", class: (tipo.to_s == "notice" ? "flash-success" : "flash-error") }= mensagem

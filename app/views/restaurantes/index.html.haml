@@ -1,25 +1,47 @@
-.form-page
-  .form-card.account-card
-    %p.eyebrow ADMINISTRAÇÃO
-    %h1 Restaurantes e Catracas
-    %p.form-intro Gerencie os restaurantes universitários (IDs 1 a 6) e suas catracas físicas.
+%h1 Gestão de Restaurantes e Catracas
 
-    %h2 Cadastrar Restaurante com Catraca
-    = form_with url: restaurantes_path, method: :post do |f|
-      .field
-        = f.label :codigo, "ID do Restaurante (1 a 6)"
-        = f.number_field :codigo, required: true
-      .field
-        = f.label :nome, "Nome do Restaurante"
-        = f.text_field :nome, placeholder: "Ex: RU Central"
-      .field
-        = f.label :catraca_codigo, "ID da Catraca Inicial (1 a 6)"
-        = f.number_field :catraca_codigo
-      = f.submit "Cadastrar Restaurante", class: "button"
+- if flash[:notice]
+  %p= flash[:notice]
+- if flash[:alert]
+  %p= flash[:alert]
 
-    %hr
-    %h2 Restaurantes Cadastrados
-    - @restaurantes.each do |restaurante|
-      .card-item
-        %strong= "#{restaurante.nome} (ID: #{restaurante.codigo})"
-        %p Catracas associadas: #{restaurante.catracas.map(&:nome).join(", ").presence || "Nenhuma"}
+%h2 Cadastrar Restaurante e Catraca Inicial
+= form_with url: restaurantes_path, method: :post, local: true do
+  %div
+    = label_tag :codigo, "ID do Restaurante (1 a 6)"
+    = number_field_tag :codigo, nil, min: 1, max: 6, required: true
+  %div
+    = label_tag :nome, "Nome do Restaurante"
+    = text_field_tag :nome, nil, placeholder: "Ex: RU Central"
+  %div
+    = label_tag :campus, "Campus"
+    = text_field_tag :campus, "UnB Darcy Ribeiro"
+  %div
+    = label_tag :catraca_codigo, "ID da Catraca Inicial (1 a 6)"
+    = number_field_tag :catraca_codigo, nil, min: 1, max: 6, required: true
+  %div
+    = submit_tag "Cadastrar Restaurante"
+
+%h2 Cadastrar Nova Catraca
+= form_with url: catracas_path, method: :post, local: true do
+  %div
+    = label_tag :restaurante_id, "Restaurante"
+    = select_tag :restaurante_id, options_from_collection_for_select(@restaurantes, :id, :nome), required: true
+  %div
+    = label_tag :codigo, "ID da Catraca (1 a 6)"
+    = number_field_tag :codigo, nil, min: 1, max: 6, required: true
+  %div
+    = label_tag :nome, "Nome da Catraca"
+    = text_field_tag :nome, nil, placeholder: "Ex: Catraca 2"
+  %div
+    = submit_tag "Cadastrar Catraca"
+
+%h2 Restaurantes Cadastrados
+- if @restaurantes.empty?
+  %p Nenhum restaurante cadastrado.
+- else
+  - @restaurantes.each do |restaurante|
+    %div
+      %h3 #{restaurante.id} - #{restaurante.nome} (#{restaurante.campus})
+      %p Catracas associadas: #{restaurante.pontos_acesso.map { |p| "#{p.id} - #{p.nome}" }.join(", ")}
+      = button_to "Remover Restaurante", restaurante_path(restaurante), method: :delete
