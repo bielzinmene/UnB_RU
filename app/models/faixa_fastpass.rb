@@ -2,6 +2,7 @@ class FaixaFastpass < ApplicationRecord
   self.table_name = "faixas_fastpass"
 
   belongs_to :turno_fastpass
+  has_many :inscricoes_fastpass, class_name: "InscricaoFastpass", dependent: :restrict_with_exception
 
   validates :inicio, :fim, presence: true
   validate :duracao_positiva

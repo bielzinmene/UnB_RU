@@ -89,6 +89,7 @@ jobs:
             features/extrato-e-historico.feature \
             features/gestao_turnos_timeframes_fastpass.feature \
             features/historico-local-catraca.feature \
+            features/inscricao_unica_fastpass.feature \
             features/recarga_de_saldo.feature \
             features/relatorio_global_acessos.feature \
             features/restaurantes-catracas.feature \
@@ -121,7 +122,12 @@ jobs:
           RAILS_ENV: test
           # RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
           # REDIS_URL: redis://localhost:6379/0
-        run: bin/rails db:test:prepare test:system
+        run: |
+          if [ -d test/system ]; then
+            bin/rails db:test:prepare test:system
+          else
+            echo "Sem testes de sistema em test/system."
+          fi
 
       - name: Keep screenshots from failed system tests
         uses: actions/upload-artifact@v4

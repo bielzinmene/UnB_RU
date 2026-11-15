@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
   get "/estudante", to: "area_estudante#index", as: :area_estudante
 
+  get "/estudante/fastpass/inscricoes", to: "inscricoes_fastpass#index", as: :inscricoes_fastpass
+  post "/estudante/fastpass/inscricoes", to: "inscricoes_fastpass#create"
+
   resource :extrato, only: :show
 
   resources :recargas, only: [ :new, :create, :show ] do
