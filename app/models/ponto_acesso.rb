@@ -2,6 +2,7 @@ class PontoAcesso < ApplicationRecord
   self.table_name = "pontos_acessos"
 
   STATUS = %w[Ativo Inativo].freeze
+  MODALIDADES = %w[Comum FastPass].freeze
 
   belongs_to :restaurante
   has_many :acessos, dependent: :restrict_with_exception
@@ -9,6 +10,7 @@ class PontoAcesso < ApplicationRecord
   validates :identificador, :nome, :campus, :status, presence: true
   validates :identificador, uniqueness: true
   validates :status, inclusion: { in: STATUS }
+  validates :modalidade, inclusion: { in: MODALIDADES }
   validates :campus, inclusion: { in: Restaurante::CAMPI }
   validate :campus_deve_corresponder_ao_restaurante
 
@@ -16,6 +18,10 @@ class PontoAcesso < ApplicationRecord
 
   def ativo?
     status == "Ativo"
+  end
+
+  def fastpass?
+    modalidade == "FastPass"
   end
 
   def autoriza_entrada?(restaurante_informado = restaurante)
