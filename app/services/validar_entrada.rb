@@ -33,14 +33,16 @@ class ValidarEntrada
     return bloquear("Matrícula não encontrada") unless estudante
 
     estudante.with_lock do
-      return bloquear("Saldo insuficiente", estudante) if
-        estudante.saldo < VALOR_REFEICAO
+      valor = estudante.isento? ? BigDecimal("0") : VALOR_REFEICAO
 
-      estudante.update!(saldo: estudante.saldo - VALOR_REFEICAO)
-      acesso = registrar("Liberado", estudante, VALOR_REFEICAO)
-      estudante.consumos.create!(
+      return bloquear("Saldo insuficiente", estudante) if
+        estudante.saldo < valor
+
+      acesso = registrar("Liberado", estudante, valor)
+      RegistrarConsumo.executar(
+        usuario: estudante,
         restaurante: ponto_acesso.restaurante.nome,
-        valor_debitado: VALOR_REFEICAO,
+        valor: valor,
         ocorrido_em: ocorrido_em,
         referencia: "acesso-#{acesso.id}"
       )
