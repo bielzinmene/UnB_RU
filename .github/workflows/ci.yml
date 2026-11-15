@@ -90,6 +90,7 @@ jobs:
             features/gestao_turnos_timeframes_fastpass.feature \
             features/historico-local-catraca.feature \
             features/inscricao_unica_fastpass.feature \
+            features/notificacao_sorteio_fastpass.feature \
             features/recarga_de_saldo.feature \
             features/relatorio_global_acessos.feature \
             features/restaurantes-catracas.feature \
