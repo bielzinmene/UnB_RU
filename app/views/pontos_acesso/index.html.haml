@@ -33,6 +33,9 @@
         .field
           = form.label :status
           = form.select :status, PontoAcesso::STATUS, include_blank: "Selecione"
+        .field
+          = form.label :modalidade, "Modalidade"
+          = form.select :modalidade, PontoAcesso::MODALIDADES
       .field
         = form.label :nome, "Nome"
         = form.text_field :nome, placeholder: "Restaurante Universitário número 5"
@@ -55,7 +58,7 @@
             %strong= ponto.identificador
             %span.status-pill{ class: (ponto.ativo? ? "status-ok" : "status-error") }= ponto.status
           %p= ponto.nome
-          %small #{ponto.campus} · #{ponto.restaurante.nome}
+          %small #{ponto.campus} · #{ponto.restaurante.nome} · #{ponto.modalidade}
           .card-actions
             = link_to "Editar", editar_ponto_acesso_path(ponto), class: "button button-outline button-small"
             - if ponto.ativo?

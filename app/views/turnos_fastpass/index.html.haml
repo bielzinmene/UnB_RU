@@ -22,12 +22,22 @@
     %hr
     - @turnos.each do |turno|
       .card-item
-        %h3 #{turno.tipo_refeicao} — #{turno.data.strftime("%d/%m/%Y")} (#{turno.inicio} às #{turno.fim})
+        %h3= "#{turno.tipo_refeicao} — #{turno.data.strftime('%d/%m/%Y')} (#{turno.inicio} às #{turno.fim})"
         %ul
           - turno.faixas_fastpass.order(:inicio).each do |faixa|
             %li= "#{faixa.inicio} às #{faixa.fim}"
 
-        = form_with url: "/admin/turnos_fastpass/#{turno.id}/faixas_fastpass", method: :post do |f|
+        = form_with url: turnos_fastpass_faixas_fastpass_index_path(turno), method: :post do |f|
           = f.text_field :inicio, placeholder: "Início (ex: 11:00)"
           = f.text_field :fim, placeholder: "Fim (ex: 11:30)"
           = f.submit "Adicionar Faixa", class: "button button-outline"
+        - if turno.sorteio_concluido_em?
+          %p Resultado do sorteio confirmado.
+        - elsif turno.inscricoes_fastpass.any?
+          = form_with url: resultado_turno_fastpass_path(turno), method: :post do |f|
+            %p Marque os estudantes sorteados. Os demais serão informados de que não ganharam.
+            - turno.inscricoes_fastpass.includes(:user, :faixa_fastpass).each do |inscricao|
+              .field
+                = check_box_tag "ganhadores[]", inscricao.id, false, id: "ganhador_#{inscricao.id}"
+                = label_tag "ganhador_#{inscricao.id}", "#{inscricao.user.nome} — #{inscricao.faixa_fastpass.inicio} às #{inscricao.faixa_fastpass.fim}"
+            = f.submit "Confirmar resultado", class: "button"

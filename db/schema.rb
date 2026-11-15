@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_14_000001) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_15_000003) do
   create_table "acessos", force: :cascade do |t|
     t.integer "ponto_acesso_id", null: false
     t.integer "user_id"
@@ -53,6 +53,28 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_14_000001) do
     t.index ["turno_fastpass_id"], name: "index_faixas_fastpass_on_turno_fastpass_id"
   end
 
+  create_table "inscricoes_fastpass", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "turno_fastpass_id", null: false
+    t.integer "faixa_fastpass_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "sorteado"
+    t.index ["faixa_fastpass_id"], name: "index_inscricoes_fastpass_on_faixa_fastpass_id"
+    t.index ["turno_fastpass_id"], name: "index_inscricoes_fastpass_on_turno_fastpass_id"
+    t.index ["user_id", "turno_fastpass_id"], name: "index_inscricoes_fastpass_on_user_and_turno", unique: true
+    t.index ["user_id"], name: "index_inscricoes_fastpass_on_user_id"
+  end
+
+  create_table "notificacoes_fastpass", force: :cascade do |t|
+    t.integer "inscricao_fastpass_id", null: false
+    t.string "mensagem", null: false
+    t.datetime "enviada_em", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["inscricao_fastpass_id"], name: "index_notificacoes_fastpass_on_inscricao_fastpass_id", unique: true
+  end
+
   create_table "pontos_acessos", force: :cascade do |t|
     t.integer "restaurante_id", null: false
     t.string "identificador", null: false
@@ -61,8 +83,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_14_000001) do
     t.string "status", default: "Ativo", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "modalidade", default: "Comum", null: false
     t.index ["identificador"], name: "index_pontos_acessos_on_identificador", unique: true
     t.index ["restaurante_id"], name: "index_pontos_acessos_on_restaurante_id"
+    t.check_constraint "modalidade IN ('Comum', 'FastPass')", name: "modalidade_do_ponto_valida"
     t.check_constraint "status IN ('Ativo', 'Inativo')", name: "status_do_ponto_de_acesso_valido"
   end
 
@@ -111,6 +135,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_14_000001) do
     t.string "fim", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "sorteio_concluido_em"
     t.index ["data", "tipo_refeicao"], name: "index_turnos_fastpass_on_data_and_tipo_refeicao", unique: true
   end
 
@@ -136,6 +161,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_14_000001) do
   add_foreign_key "acessos", "users"
   add_foreign_key "consumos", "users"
   add_foreign_key "faixas_fastpass", "turnos_fastpass", column: "turno_fastpass_id"
+  add_foreign_key "inscricoes_fastpass", "faixas_fastpass", column: "faixa_fastpass_id"
+  add_foreign_key "inscricoes_fastpass", "turnos_fastpass", column: "turno_fastpass_id"
+  add_foreign_key "inscricoes_fastpass", "users"
+  add_foreign_key "notificacoes_fastpass", "inscricoes_fastpass", column: "inscricao_fastpass_id"
   add_foreign_key "pontos_acessos", "restaurantes"
   add_foreign_key "recargas", "users"
 end

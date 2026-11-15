@@ -50,6 +50,7 @@ class PontosAcessoController < ApplicationController
       :nome,
       :campus,
       :status,
+      :modalidade,
       :restaurante_id
     )
   end

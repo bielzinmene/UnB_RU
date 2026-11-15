@@ -4,6 +4,7 @@ class User < ApplicationRecord
   has_many :recargas, dependent: :restrict_with_exception
 
   has_many :consumos, dependent: :restrict_with_exception
+  has_many :inscricoes_fastpass, class_name: "InscricaoFastpass", dependent: :restrict_with_exception
 
   ROLES = %w[estudante funcionario administrador].freeze
 

@@ -1,0 +1,30 @@
+- content_for :title, "Inscrição FastPass | UnB RU"
+
+.page-heading
+  %div
+    %p.eyebrow FASTPASS
+    %h1 Inscrição no sorteio
+    %p.page-subtitle Escolha uma faixa por dia e refeição. A inscrição é gratuita.
+
+- if @inscricoes.any?
+  .form-card
+    %h2 Minhas inscrições
+    %ul
+      - @inscricoes.each do |inscricao|
+        %li
+          = "#{inscricao.turno_fastpass.tipo_refeicao} de #{inscricao.turno_fastpass.data.strftime('%d/%m/%Y')}: #{inscricao.faixa_fastpass.inicio} às #{inscricao.faixa_fastpass.fim}"
+          - if inscricao.notificacao_fastpass
+            %strong= inscricao.notificacao_fastpass.mensagem
+
+.form-card
+  %h2 Faixas disponíveis
+  - if @turnos.empty?
+    %p Não há faixas FastPass cadastradas.
+  - @turnos.each do |turno|
+    - next if turno.faixas_fastpass.empty?
+    %h3= "#{turno.tipo_refeicao} de #{turno.data.strftime('%d/%m/%Y')}"
+    - turno.faixas_fastpass.sort_by(&:inicio).each do |faixa|
+      = form_with url: inscricoes_fastpass_path, method: :post do |form|
+        = form.hidden_field :turno_fastpass_id, value: turno.id
+        = form.hidden_field :faixa_fastpass_id, value: faixa.id
+        = form.submit "Inscrever-se: #{faixa.inicio} às #{faixa.fim}", class: "button button-outline"

@@ -2,6 +2,7 @@ class TurnoFastpass < ApplicationRecord
   self.table_name = "turnos_fastpass"
 
   has_many :faixas_fastpass, class_name: "FaixaFastpass", dependent: :destroy
+  has_many :inscricoes_fastpass, class_name: "InscricaoFastpass", dependent: :restrict_with_exception
 
   validates :data, presence: true
   validates :tipo_refeicao, presence: true, uniqueness: { scope: :data, message: "já configurado para esta data" }
@@ -14,6 +15,11 @@ class TurnoFastpass < ApplicationRecord
 
   def fim_minutos
     converter_para_minutos(fim)
+  end
+
+  def inicio_em
+    horas, minutos = inicio.split(":").map(&:to_i)
+    Time.zone.local(data.year, data.month, data.day, horas, minutos)
   end
 
   private
