@@ -3,7 +3,7 @@
     before_action :exigir_administrador
 
     def create
-      turno = TurnoFastpass.find(params[:turno_fastpass_id])
+      turno = TurnoFastpass.find(params[:turnos_fastpass_id])
       faixa = turno.faixas_fastpass.build(inicio: params[:inicio], fim: params[:fim])
 
       if faixa.save
