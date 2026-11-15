@@ -42,7 +42,7 @@ class ValidarEntrada
       RegistrarConsumo.executar(
         usuario: estudante,
         restaurante: ponto_acesso.restaurante.nome,
-        valor: valor,
+        valor: valor.to_s("F"),
         ocorrido_em: ocorrido_em,
         referencia: "acesso-#{acesso.id}"
       )
