@@ -6,7 +6,7 @@
     %div
       %p.eyebrow OPERAÇÃO ATIVA
       %h1 #{@ponto_acesso.identificador} · #{@ponto_acesso.nome}
-      %p.panel-subtitle #{@ponto_acesso.campus} · Tarifa base: R$ 2,50
+      %p.panel-subtitle #{@ponto_acesso.campus} · #{@ponto_acesso.modalidade} · Tarifa base: R$ 2,50
   .official-clock
     %small HORÁRIO OFICIAL
     %strong= Time.current.strftime("%H:%M:%S")

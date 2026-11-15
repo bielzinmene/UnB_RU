@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_15_000002) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_15_000003) do
   create_table "acessos", force: :cascade do |t|
     t.integer "ponto_acesso_id", null: false
     t.integer "user_id"
@@ -83,8 +83,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_15_000002) do
     t.string "status", default: "Ativo", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "modalidade", default: "Comum", null: false
     t.index ["identificador"], name: "index_pontos_acessos_on_identificador", unique: true
     t.index ["restaurante_id"], name: "index_pontos_acessos_on_restaurante_id"
+    t.check_constraint "modalidade IN ('Comum', 'FastPass')", name: "modalidade_do_ponto_valida"
     t.check_constraint "status IN ('Ativo', 'Inativo')", name: "status_do_ponto_de_acesso_valido"
   end
 

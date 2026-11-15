@@ -22,6 +22,9 @@
       .field
         = form.label :status
         = form.select :status, PontoAcesso::STATUS
+      .field
+        = form.label :modalidade, "Modalidade"
+        = form.select :modalidade, PontoAcesso::MODALIDADES
     .field
       = form.label :nome
       = form.text_field :nome
