@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_14_000001) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_15_000001) do
   create_table "acessos", force: :cascade do |t|
     t.integer "ponto_acesso_id", null: false
     t.integer "user_id"
@@ -51,6 +51,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_14_000001) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["turno_fastpass_id"], name: "index_faixas_fastpass_on_turno_fastpass_id"
+  end
+
+  create_table "inscricoes_fastpass", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "turno_fastpass_id", null: false
+    t.integer "faixa_fastpass_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["faixa_fastpass_id"], name: "index_inscricoes_fastpass_on_faixa_fastpass_id"
+    t.index ["turno_fastpass_id"], name: "index_inscricoes_fastpass_on_turno_fastpass_id"
+    t.index ["user_id", "turno_fastpass_id"], name: "index_inscricoes_fastpass_on_user_and_turno", unique: true
+    t.index ["user_id"], name: "index_inscricoes_fastpass_on_user_id"
   end
 
   create_table "pontos_acessos", force: :cascade do |t|
@@ -136,6 +148,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_14_000001) do
   add_foreign_key "acessos", "users"
   add_foreign_key "consumos", "users"
   add_foreign_key "faixas_fastpass", "turnos_fastpass", column: "turno_fastpass_id"
+  add_foreign_key "inscricoes_fastpass", "faixas_fastpass", column: "faixa_fastpass_id"
+  add_foreign_key "inscricoes_fastpass", "turnos_fastpass", column: "turno_fastpass_id"
+  add_foreign_key "inscricoes_fastpass", "users"
   add_foreign_key "pontos_acessos", "restaurantes"
   add_foreign_key "recargas", "users"
 end
