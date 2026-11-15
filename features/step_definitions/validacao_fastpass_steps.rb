@@ -57,13 +57,13 @@ end
 Dado(/^que "([^"]*)" foi sorteada para essa faixa$/) do |nome|
   expect(@inscricao_validacao.user.nome).to eq(nome)
   @inscricao_validacao.update!(sorteado: true)
-  @turno_validacao.update!(sorteio_concluido_em: Time.current)
 end
 
 Dado(/^que "([^"]*)" participou do sorteio desse almoço e não foi sorteado$/) do |nome|
   faixa = @turno_validacao.faixas_fastpass.first
   InscricaoFastpass.create!(user: estudante_da_validacao(nome),
     turno_fastpass: @turno_validacao, faixa_fastpass: faixa, sorteado: false)
+  @turno_validacao.update!(sorteio_concluido_em: Time.current)
 end
 
 Dado(/^que o valor da refeição é de R\$ ([\d,.]+)$/) do |valor|
