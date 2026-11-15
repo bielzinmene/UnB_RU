@@ -79,7 +79,7 @@ jobs:
         run: |
           bin/rails db:test:prepare test
           bundle exec rspec
-          bundle exec cucumber features/cadastro_estudante.feature features/autenticacao_funcionario.feature features/cardapio-refeicao-atual.feature --publish-quiet
+          bundle exec cucumber features/cadastro_estudante.feature features/autenticacao_funcionario.feature features/cardapio-refeicao-atual.feature features/recarga_de_saldo.feature features/extrato-e-historico.feature features/exportacao_pdf_historico_estudante.feature --publish-quiet
 
   system-test:
     runs-on: ubuntu-latest
