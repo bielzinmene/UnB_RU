@@ -1,4 +1,4 @@
-module Admin
+
   class TurnosFastpassController < ApplicationController
     before_action :exigir_administrador
 
@@ -15,10 +15,9 @@ module Admin
       )
 
       if turno.save
-        redirect_to admin_turnos_fastpass_index_path, notice: "Turno configurado com sucesso!"
+        redirect_to turnos_fastpass_index_path, notice: "Turno configurado com sucesso!"
       else
-        redirect_to admin_turnos_fastpass_index_path, alert: turno.errors.full_messages.join(", ")
+        redirect_to turnos_fastpass_index_path, alert: turno.errors.full_messages.join(", ")
       end
     end
   end
-end

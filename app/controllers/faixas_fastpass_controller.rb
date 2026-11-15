@@ -1,4 +1,4 @@
-module Admin
+
   class FaixasFastpassController < ApplicationController
     before_action :exigir_administrador
 
@@ -7,10 +7,9 @@ module Admin
       faixa = turno.faixas_fastpass.build(inicio: params[:inicio], fim: params[:fim])
 
       if faixa.save
-        redirect_to admin_turnos_fastpass_index_path, notice: "Faixa adicionada com sucesso!"
+        redirect_to turnos_fastpass_index_path, notice: "Faixa adicionada com sucesso!"
       else
-        redirect_to admin_turnos_fastpass_index_path, alert: faixa.errors.full_messages.join(", ")
+        redirect_to turnos_fastpass_index_path, alert: faixa.errors.full_messages.join(", ")
       end
     end
   end
-end

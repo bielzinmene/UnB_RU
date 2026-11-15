@@ -1,4 +1,4 @@
-module Admin
+
   class RestaurantesController < ApplicationController
     before_action :exigir_administrador
 
@@ -18,9 +18,9 @@ module Admin
         GerenciarRestauranteCatraca.associar_catraca!(catraca_codigo: catraca.codigo, restaurante_codigo: restaurante.codigo)
       end
       GerenciarRestauranteCatraca.validar_restaurante_com_catraca!(restaurante)
-      redirect_to admin_restaurantes_path, notice: "Restaurante cadastrado com sucesso!"
+      redirect_to restaurantes_path, notice: "Restaurante cadastrado com sucesso!"
     rescue GerenciarRestauranteCatraca::ErroValidacao => erro
-      redirect_to admin_restaurantes_path, alert: erro.message
+      redirect_to restaurantes_path, alert: erro.message
     end
 
     def associar_catraca
@@ -28,14 +28,13 @@ module Admin
         catraca_codigo: params[:catraca_codigo],
         restaurante_codigo: params[:id]
       )
-      redirect_to admin_restaurantes_path, notice: "Catraca associada com sucesso!"
+      redirect_to restaurantes_path, notice: "Catraca associada com sucesso!"
     rescue GerenciarRestauranteCatraca::ErroValidacao => erro
-      redirect_to admin_restaurantes_path, alert: erro.message
+      redirect_to restaurantes_path, alert: erro.message
     end
 
     def destroy
       Restaurante.find(params[:id]).destroy
-      redirect_to admin_restaurantes_path, notice: "Restaurante removido."
+      redirect_to restaurantes_path, notice: "Restaurante removido."
     end
   end
-end

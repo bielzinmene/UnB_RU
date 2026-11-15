@@ -1,0 +1,35 @@
+%h1 Relatório Global de Acessos
+
+= form_with url: relatorio_acessos_path, method: :get, local: true do |f|
+  %div
+    = label_tag :restaurante, "Restaurante"
+    = text_field_tag :restaurante, params[:restaurante]
+  %div
+    = label_tag :catraca, "Catraca"
+    = text_field_tag :catraca, params[:catraca]
+  %div
+    = label_tag :agrupar_por, "Agrupar por"
+    = select_tag :agrupar_por, options_for_select([["Sem agrupamento", ""], ["Restaurante", "restaurante"], ["Catraca", "catraca"]], params[:agrupar_por])
+  %div
+    = submit_tag "Filtrar"
+
+- if @registros.empty?
+  %p Nenhum acesso até então
+- else
+  - @grupos.each do |grupo, lista|
+    %h2= grupo
+    %p Total de acessos: #{lista.size}
+    %table
+      %thead
+        %tr
+          %th Data e Hora
+          %th Matrícula
+          %th Restaurante
+          %th Catraca
+      %tbody
+        - lista.each do |acesso|
+          %tr
+            %td= acesso.ocorrido_em.strftime("%d/%m/%Y %H:%M")
+            %td= acesso.matricula
+            %td= acesso.ponto_acesso.restaurante.nome
+            %td= acesso.ponto_acesso.nome

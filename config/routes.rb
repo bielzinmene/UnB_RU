@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     end
   end
 
-  namespace :admin do
+  scope "/admin" do
     resources :restaurantes, only: [ :index, :create, :destroy ] do
       post :associar_catraca, on: :member
     end
