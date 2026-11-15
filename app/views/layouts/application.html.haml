@@ -18,6 +18,7 @@
           = link_to "Cardápio", cardapio_path
           = link_to "Cadastro de estudante", cadastro_path
           - if usuario_atual&.estudante?
+            = link_to "Área do estudante", area_estudante_path
             = button_to "Sair da conta", logout_estudante_path, method: :delete, class: "nav-button"
           - else
             = link_to "Entrar como estudante", login_estudante_path

@@ -1,0 +1,52 @@
+- content_for :title, "Extrato e histórico | UnB RU"
+
+.page-heading
+  %div
+    %p.eyebrow ÁREA DO ESTUDANTE
+    %h1 Extrato e histórico
+    %p.page-subtitle Suas recargas e refeições, do registro mais recente ao mais antigo.
+
+  = link_to "Área do estudante", area_estudante_path, class: "button button-outline"
+
+  = link_to "Exportar PDF", extrato_path(format: :pdf), class: "button button-primary"
+
+.form-card
+  %p
+    Saldo disponível:
+    %strong= number_to_currency(usuario_atual.saldo, unit: "R$ ", separator: ",", delimiter: ".")
+
+%section.form-card#extrato-recargas
+  %h2 Recargas
+
+  - if @extrato.recargas.empty?
+    %p Nenhuma recarga encontrada
+  - else
+    %table
+      %thead
+        %tr
+          %th{ scope: "col" } Data e hora
+          %th{ scope: "col" } Valor
+      %tbody
+        - @extrato.recargas.each do |recarga|
+          %tr
+            %td= recarga.confirmada_em.strftime("%d/%m/%Y %H:%M")
+            %td= number_to_currency(recarga.valor, unit: "R$ ", separator: ",", delimiter: ".")
+
+%section.form-card#historico-refeicoes
+  %h2 Refeições
+
+  - if @extrato.consumos.empty?
+    %p Nenhum histórico de refeições encontrado
+  - else
+    %table
+      %thead
+        %tr
+          %th{ scope: "col" } Data e hora
+          %th{ scope: "col" } Restaurante
+          %th{ scope: "col" } Valor debitado
+      %tbody
+        - @extrato.consumos.each do |consumo|
+          %tr
+            %td= consumo.ocorrido_em.strftime("%d/%m/%Y %H:%M")
+            %td= consumo.restaurante
+            %td= number_to_currency(consumo.valor_debitado, unit: "R$ ", separator: ",", delimiter: ".")

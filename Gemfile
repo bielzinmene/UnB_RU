@@ -69,3 +69,9 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+gem "prawn", "~> 2.5"
+
+group :test do
+  gem "pdf-reader", "~> 2.15"
+end
