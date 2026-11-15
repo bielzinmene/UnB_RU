@@ -20,6 +20,8 @@ Rails.application.routes.draw do
     resources :turnos_fastpass, only: [ :index, :create ] do
       resources :faixas_fastpass, only: [ :create ]
     end
+    post "/turnos_fastpass/:turno_fastpass_id/resultado",
+      to: "resultados_fastpass#create", as: :resultado_turno_fastpass
     resource :relatorio_acessos, only: [ :show ]
   end
 

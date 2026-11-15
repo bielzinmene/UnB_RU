@@ -17,6 +17,11 @@ class TurnoFastpass < ApplicationRecord
     converter_para_minutos(fim)
   end
 
+  def inicio_em
+    horas, minutos = inicio.split(":").map(&:to_i)
+    Time.zone.local(data.year, data.month, data.day, horas, minutos)
+  end
+
   private
 
   def duracao_positiva

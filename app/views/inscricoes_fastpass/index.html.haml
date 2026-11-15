@@ -13,6 +13,8 @@
       - @inscricoes.each do |inscricao|
         %li
           = "#{inscricao.turno_fastpass.tipo_refeicao} de #{inscricao.turno_fastpass.data.strftime('%d/%m/%Y')}: #{inscricao.faixa_fastpass.inicio} às #{inscricao.faixa_fastpass.fim}"
+          - if inscricao.notificacao_fastpass
+            %strong= inscricao.notificacao_fastpass.mensagem
 
 .form-card
   %h2 Faixas disponíveis
