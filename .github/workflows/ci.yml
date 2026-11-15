@@ -95,6 +95,7 @@ jobs:
             features/relatorio_global_acessos.feature \
             features/restaurantes-catracas.feature \
             features/validacao_de_entrada.feature \
+            features/validacao_fastpass.feature \
             --publish-quiet
 
   system-test:
